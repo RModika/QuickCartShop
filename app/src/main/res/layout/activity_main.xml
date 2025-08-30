@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:padding="24dp"
     android:background="#FFF0F5"
-    tools:context=".ui.auth.SignUpActivity$LoginActivity"
+    tools:context=".ui.auth.SignUpActivity"
     tools:ignore="ExtraText">
 
     <!-- Logo at the top -->
@@ -25,8 +25,11 @@
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:src="@drawable/logo"
-        tools:layout_editor_absoluteX="125dp"
-        tools:layout_editor_absoluteY="57dp" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp" />
+
 
     <TextView
         android:id="@+id/textWelcome"

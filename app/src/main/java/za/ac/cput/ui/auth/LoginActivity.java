@@ -1,16 +1,11 @@
-package za.ac.cput;
+package za.ac.cput.ui.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MotionEvent;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -18,18 +13,26 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import za.ac.cput.ui.auth.SignUpActivity;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import za.ac.cput.R;
+import za.ac.cput.model.User;
+import za.ac.cput.model.UserAuth;
+import za.ac.cput.services.ApiClient;
+import za.ac.cput.services.UsersApi;
+import za.ac.cput.ui.home.HomeActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     EditText editEmail, editPassword;
     Button btnLogin;
+    UsersApi usersApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-
         setContentView(R.layout.activity_main);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -38,57 +41,58 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        // ✅ Make sure textRegister exists in your activity_main.xml
+        // UI Components
         TextView registerText = findViewById(R.id.textRegister);
-        registerText.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
-            startActivity(intent);
-        });
-
         editEmail = findViewById(R.id.editEmail);
         editPassword = findViewById(R.id.editPassword);
         btnLogin = findViewById(R.id.btnLogin);
 
+        // Navigate to Register
+        registerText.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+            startActivity(intent);
+        });
+
+        // Retrofit API Init
+        usersApi = ApiClient.getClient().create(UsersApi.class);
+
+        // Login Button Listener
         btnLogin.setOnClickListener(view -> {
             String email = editEmail.getText().toString().trim();
             String password = editPassword.getText().toString().trim();
 
             if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(MainActivity.this, "Please fill in both fields", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Please fill in both fields", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(MainActivity.this, "Logging in as " + email, Toast.LENGTH_SHORT).show();
-                // 🚀 Later: Navigate to home screen or verify login
+                performLogin(email, password);
             }
         });
     }
 
+    private void performLogin(String email, String password) {
+        UserAuth loginRequest = new UserAuth(email, password);
 
+        Call<User> call = usersApi.loginUser(loginRequest);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    User user = response.body();
+                    Toast.makeText(LoginActivity.this, "Welcome " + user.getName(), Toast.LENGTH_LONG).show();
 
-    private void setCategoryClick(int viewId, String categoryName) {
-        ImageView category = findViewById(viewId);
-        if (category != null) {
-            category.setOnTouchListener((v, event) -> {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        Animation scaleDown = AnimationUtils.loadAnimation(this, R.anim.scale_down);
-                        v.startAnimation(scaleDown);
-                        return true;
+                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                    startActivity(intent);
+                    finish();
 
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_CANCEL:
-                        Animation scaleUp = AnimationUtils.loadAnimation(this, R.anim.scale_up);
-                        v.startAnimation(scaleUp);
-
-                        v.performClick(); // ✅ Ensures accessibility compliance
-                        return true;
+                } else {
+                    Toast.makeText(LoginActivity.this, "Login failed. Check credentials.", Toast.LENGTH_SHORT).show();
                 }
-                return false;
-            });
+            }
 
-            category.setOnClickListener(v ->
-                    Toast.makeText(this, categoryName + " clicked", Toast.LENGTH_SHORT).show()
-            );
-        }
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Toast.makeText(LoginActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
-
 }
