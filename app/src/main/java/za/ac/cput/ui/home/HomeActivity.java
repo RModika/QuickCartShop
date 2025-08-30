@@ -1,6 +1,7 @@
 package za.ac.cput.ui.home;
 //
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.animation.Animation;
@@ -15,6 +16,7 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import za.ac.cput.R;
+import za.ac.cput.ui.auth.CartActivity;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -62,9 +64,19 @@ public class HomeActivity extends AppCompatActivity {
                 return false;
             });
 
-            category.setOnClickListener(v ->
-                    Toast.makeText(this, categoryName + " clicked", Toast.LENGTH_SHORT).show()
-            );
+            category.setOnClickListener(v -> {
+                switch (categoryName) {
+                    case "Orders":
+                        startActivity(new Intent(HomeActivity.this, OrdersActivity.class));
+                        break;
+                    case "Cart":
+                        startActivity(new Intent(HomeActivity.this, CartActivity.class));
+                        break;
+                    default:
+                        Toast.makeText(this, categoryName + " clicked", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            });
         }
     }
 
