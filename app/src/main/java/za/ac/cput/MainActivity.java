@@ -2,8 +2,12 @@ package za.ac.cput;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,4 +61,34 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
+
+    private void setCategoryClick(int viewId, String categoryName) {
+        ImageView category = findViewById(viewId);
+        if (category != null) {
+            category.setOnTouchListener((v, event) -> {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        Animation scaleDown = AnimationUtils.loadAnimation(this, R.anim.scale_down);
+                        v.startAnimation(scaleDown);
+                        return true;
+
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        Animation scaleUp = AnimationUtils.loadAnimation(this, R.anim.scale_up);
+                        v.startAnimation(scaleUp);
+
+                        v.performClick(); // ✅ Ensures accessibility compliance
+                        return true;
+                }
+                return false;
+            });
+
+            category.setOnClickListener(v ->
+                    Toast.makeText(this, categoryName + " clicked", Toast.LENGTH_SHORT).show()
+            );
+        }
+    }
+
 }
