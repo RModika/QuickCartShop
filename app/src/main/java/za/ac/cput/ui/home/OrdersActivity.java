@@ -41,7 +41,7 @@
 //    private void fetchOrders() {
 //        progressBar.setVisibility(View.VISIBLE);
 //
-//        ApiService apiService = ApiClient.getClient().create(ApiService.class);
+//        OrderApiService apiService = OrderApi.getClient().create(OrderApiService.class);
 //        apiService.getAllOrders().enqueue(new Callback<List<CustomerOrder>>() {
 //            @Override
 //            public void onResponse(Call<List<CustomerOrder>> call, Response<List<CustomerOrder>> response) {
@@ -80,8 +80,8 @@ import retrofit2.Response;
 import za.ac.cput.R;
 import za.ac.cput.adapters.OrdersAdapter;
 import za.ac.cput.model.CustomerOrder;
-import za.ac.cput.services.ApiClient;
-import za.ac.cput.services.ApiService;
+import za.ac.cput.services.OrderApi;
+import za.ac.cput.services.OrderApiService;
 
 public class OrdersActivity extends AppCompatActivity {
 
@@ -102,8 +102,8 @@ public class OrdersActivity extends AppCompatActivity {
     }
 
     private void fetchOrders() {
-        ApiService apiService = ApiClient.getClient().create(ApiService.class);
-        Call<List<CustomerOrder>> call = apiService.getOrders();
+        OrderApiService orderApiService = OrderApi.getClient().create(OrderApiService.class);
+        Call<List<CustomerOrder>> call = orderApiService.getOrders();
         call.enqueue(new Callback<List<CustomerOrder>>() {
             @Override
             public void onResponse(Call<List<CustomerOrder>> call, Response<List<CustomerOrder>> response) {
