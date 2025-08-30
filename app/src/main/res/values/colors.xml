@@ -9,10 +9,4 @@
     <color name="accent_pink">#F06292</color> <!-- stronger pink -->
     <color name="text_primary">#333333</color>
 </resources>
-    <!--
-        <TextView
-            android:id="@+id/sampleText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hello World!" />
-    -->
+

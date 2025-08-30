@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:padding="24dp"
     android:background="#FFF0F5"
-    tools:context=".MainActivity"
+    tools:context=".ui.auth.SignUpActivity$LoginActivity"
     tools:ignore="ExtraText">
 
     <!-- Logo at the top -->
