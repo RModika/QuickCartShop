@@ -39,7 +39,7 @@
             </intent-filter>
         </activity>
 
-        <!-- CartActivity (optional as part of flow) -->
+
         <activity
             android:name=".ui.auth.CartActivity"
             android:exported="true">
