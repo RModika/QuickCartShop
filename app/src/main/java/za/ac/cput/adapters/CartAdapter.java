@@ -14,7 +14,7 @@ import java.util.List;
 
 import za.ac.cput.R;
 import za.ac.cput.model.CartItem;
-
+//
 public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder> {
 
     List<CartItem> cartItems;

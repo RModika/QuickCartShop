@@ -1,5 +1,5 @@
 package za.ac.cput.model;
-
+//
 public class CartItem {
     private String name;
     private double price;

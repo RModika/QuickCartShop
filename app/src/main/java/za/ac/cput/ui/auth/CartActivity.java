@@ -20,6 +20,7 @@ import za.ac.cput.R;
 import za.ac.cput.adapters.CartAdapter;
 import za.ac.cput.model.CartItem;
 
+//
 public class CartActivity extends AppCompatActivity implements CartAdapter.OnCartChangeListener {
 
     RecyclerView recyclerView;
