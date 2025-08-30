@@ -1,4 +1,4 @@
-package za.ac.cput;
+package za.ac.cput.ui.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,16 +7,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import za.ac.cput.ui.auth.SignUpActivity;
+import za.ac.cput.R;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     EditText editEmail, editPassword;
     Button btnLogin;
@@ -37,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         // ✅ Make sure textRegister exists in your activity_main.xml
         TextView registerText = findViewById(R.id.textRegister);
         registerText.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
+            Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
             startActivity(intent);
         });
 
@@ -50,11 +49,12 @@ public class MainActivity extends AppCompatActivity {
             String password = editPassword.getText().toString().trim();
 
             if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(MainActivity.this, "Please fill in both fields", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Please fill in both fields", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(MainActivity.this, "Logging in as " + email, Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Logging in as " + email, Toast.LENGTH_SHORT).show();
                 // 🚀 Later: Navigate to home screen or verify login
             }
         });
     }
 }
+

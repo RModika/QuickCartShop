@@ -1,7 +1,6 @@
 package za.ac.cput.ui.home;
 //
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.animation.Animation;
@@ -57,23 +56,17 @@ public class HomeActivity extends AppCompatActivity {
                         Animation scaleUp = AnimationUtils.loadAnimation(this, R.anim.scale_up);
                         v.startAnimation(scaleUp);
 
-                        v.performClick();
+                        v.performClick(); // ✅ Ensures accessibility compliance
                         return true;
                 }
                 return false;
             });
 
-            category.setOnClickListener(v -> {
-                if (categoryName.equals("Cart")) {
-                    // Launch CartActivity
-                    startActivity(new Intent(HomeActivity.this, za.ac.cput.ui.auth.CartActivity.class));
-                } else {
-                    Toast.makeText(this, categoryName + " clicked", Toast.LENGTH_SHORT).show();
-                }
-            });
+            category.setOnClickListener(v ->
+                    Toast.makeText(this, categoryName + " clicked", Toast.LENGTH_SHORT).show()
+            );
         }
     }
-
 
 
 }

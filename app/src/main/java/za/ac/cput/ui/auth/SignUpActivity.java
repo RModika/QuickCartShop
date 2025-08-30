@@ -11,6 +11,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -18,7 +22,6 @@ import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import za.ac.cput.MainActivity;
 import za.ac.cput.R;
 
 import java.io.IOException;
@@ -53,7 +56,7 @@ public class SignUpActivity extends AppCompatActivity {
         btnSignUp.setOnClickListener(v -> registerUser());
 
         btnGoToLogin.setOnClickListener(v -> {
-            startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+            startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
             finish();
         });
     }
@@ -124,7 +127,7 @@ public class SignUpActivity extends AppCompatActivity {
                     // You can parse your response if JSON, or just check success string
                     runOnUiThread(() -> {
                         Toast.makeText(SignUpActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+                        startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
                         finish();
                     });
                 } else {
@@ -134,4 +137,5 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
     }
+
 }
