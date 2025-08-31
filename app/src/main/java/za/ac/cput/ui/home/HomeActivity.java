@@ -58,10 +58,41 @@ public class HomeActivity extends AppCompatActivity {
         setCategoryClick(R.id.householdCategory, "Household");
         setCategoryClick(R.id.beautyCategory, "Beauty");
         setCategoryClick(R.id.snacksCategory, "Snacks");
-        setCategoryClick(R.id.ordersCategory, "Orders");
-        setCategoryClick(R.id.profileCategory, "Profile");
-        setCategoryClick(R.id.cartCategory, "Cart");
-        setCategoryClick(R.id.homeCategory, "Home");
+        setCategoryClick(R.id.bakeryCategory, "Bakery");
+        setCategoryClick(R.id.dairyCategory, "Dairy");
+//        setCategoryClick(R.id.ordersCategory, "Orders");
+//        setCategoryClick(R.id.profileCategory, "Profile");
+//        setCategoryClick(R.id.cartCategory, "Cart");
+//        setCategoryClick(R.id.homeCategory, "Home");
+        setBottomNavigationClicks();
+    }
+
+    // Add this method anywhere in your class
+    private void setBottomNavigationClicks() {
+        ImageView homeIcon = findViewById(R.id.homeIcon);
+        ImageView profileIcon = findViewById(R.id.profileIcon);
+        ImageView ordersIcon = findViewById(R.id.ordersIcon);
+        ImageView cartIcon = findViewById(R.id.cartIcon);
+
+        homeIcon.setOnClickListener(v -> {
+            // Handle home icon click
+            Toast.makeText(this, "Home clicked", Toast.LENGTH_SHORT).show();
+        });
+
+        profileIcon.setOnClickListener(v -> {
+            // Handle profile icon click
+            Toast.makeText(this, "Profile clicked", Toast.LENGTH_SHORT).show();
+        });
+
+        ordersIcon.setOnClickListener(v -> {
+            // Handle orders icon click
+            startActivity(new Intent(HomeActivity.this, OrdersActivity.class));
+        });
+
+        cartIcon.setOnClickListener(v -> {
+            // Handle cart icon click
+            startActivity(new Intent(HomeActivity.this, CartActivity.class));
+        });
     }
 
     @SuppressLint("ClickableViewAccessibility")
