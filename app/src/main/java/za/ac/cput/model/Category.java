@@ -12,7 +12,7 @@ public class Category {
     @SerializedName("description")
     private String description;
 
-    // Constructors
+
     public Category() {}
 
     public Category(Long categoryId, String name, String description) {
@@ -21,7 +21,7 @@ public class Category {
         this.description = description;
     }
 
-    // Getters and Setters
+
     public Long getCategoryId() { return categoryId; }
     public void setCategoryId(Long categoryId) { this.categoryId = categoryId; }
 
