@@ -87,6 +87,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
 
+    <!-- Phone Number -->
+    <EditText
+        android:id="@+id/editPhoneNumber"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Phone Number"
+        android:inputType="phone"
+        android:backgroundTint="#D81B60"
+        app:layout_constraintTop_toBottomOf="@id/editConfirmPassword"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
     <!-- Register Button -->
     <Button
         android:id="@+id/btnRegister"
@@ -95,7 +107,7 @@
         android:text="Register"
         android:backgroundTint="#D81B60"
         android:textColor="#FFFFFF"
-        app:layout_constraintTop_toBottomOf="@id/editConfirmPassword"
+        app:layout_constraintTop_toBottomOf="@id/editPhoneNumber"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="24dp" />
@@ -110,8 +122,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
-
-
 
     <!-- Back to Login -->
     <TextView

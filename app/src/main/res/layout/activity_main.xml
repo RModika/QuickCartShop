@@ -8,18 +8,9 @@
     android:layout_height="match_parent"
     android:padding="24dp"
     android:background="#FFF0F5"
-    tools:context=".ui.auth.SignUpActivity"
-    tools:ignore="ExtraText">
+    tools:context=".ui.auth.LoginActivity">
 
     <!-- Logo at the top -->
-    <!-- Place your logo.png in res/drawable -->
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    android:layout_marginTop="32dp" />
-
-    <!-- Welcome text -->
-
     <ImageView
         android:id="@+id/logoImage"
         android:layout_width="120dp"
@@ -30,7 +21,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="32dp" />
 
-
+    <!-- Welcome text -->
     <TextView
         android:id="@+id/textWelcome"
         android:layout_width="wrap_content"
@@ -83,7 +74,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"/>
 
-    <!-- Login button (reduced width) -->
+    <!-- ProgressBar -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/editPassword"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp" />
+
+    <!-- Login button -->
     <Button
         android:id="@+id/btnLogin"
         android:layout_width="200dp"
@@ -91,10 +94,10 @@
         android:text="Login"
         android:backgroundTint="#D81B60"
         android:textColor="#FFFFFF"
-        app:layout_constraintTop_toBottomOf="@id/editPassword"
+        app:layout_constraintTop_toBottomOf="@id/progressBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp"/>
+        android:layout_marginTop="12dp"/>
 
     <!-- Register link -->
     <TextView

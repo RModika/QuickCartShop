@@ -8,10 +8,3 @@
     android:pivotX="50%"
     android:pivotY="50%"
     android:fillAfter="true" />
-    <!--
-        <TextView
-            android:id="@+id/sampleText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hello World!" />
-    -->

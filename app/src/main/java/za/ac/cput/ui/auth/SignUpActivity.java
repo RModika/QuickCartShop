@@ -36,7 +36,7 @@ public class SignUpActivity extends AppCompatActivity {
     private OkHttpClient client = new OkHttpClient();
 
     // TODO: Replace with your actual backend URL for registration API
-    private static final String REGISTER_URL = "http://192.168.10.125:8080/mobileApp/users/create";
+    private static final String REGISTER_URL = "http://10.0.2.2:8080/mobileApp/users/create";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

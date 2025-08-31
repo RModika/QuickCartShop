@@ -8,5 +8,7 @@
     <color name="card_light">#FFFFFF</color>
     <color name="accent_pink">#F06292</color> <!-- stronger pink -->
     <color name="text_primary">#333333</color>
+    <color name="primaryColor">#6200EE</color>
+
 </resources>
 
