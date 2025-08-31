@@ -68,10 +68,10 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
         adapter = new CartAdapter(cartItems, this);
         recyclerView.setAdapter(adapter);
 
-        // Initialize Retrofit service
+
         apiService = CartApi.getClient().create(CartApiService.class);
 
-        // Load cart items from backend
+
         loadCartItems();
 
         btnCheckout.setOnClickListener(v ->
@@ -130,12 +130,12 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
     public void onCartUpdated() {
         updateTotal();
         toggleEmptyView();
-        // Optionally call API to sync cart item changes with backend
+
     }
 
     @Override
     public boolean onSupportNavigateUp() {
-        finish(); // Back button
+        finish();
         return true;
     }
 }
