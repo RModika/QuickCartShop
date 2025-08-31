@@ -1,213 +1,284 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:fillViewport="true">
+    android:background="#FFF0F5"
+    android:padding="16dp">
 
-    <GridLayout
-        android:layout_width="match_parent"
+    <!-- App Name -->
+    <TextView
+        android:id="@+id/appName"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:columnCount="2"
-        android:rowCount="4"
+        android:text="My Shop"
+        android:textColor="#D81B60"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Search Bar -->
+    <EditText
+        android:id="@+id/searchBar"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:hint="Search products"
+        android:background="@drawable/search_bar_background"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:drawableStart="@drawable/ic_search"
+        android:drawablePadding="8dp"
+        android:inputType="text"
+        app:layout_constraintTop_toBottomOf="@id/appName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp" />
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/searchBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavBar"
+        android:fillViewport="true">
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="3"
+            android:rowCount="4"
+            android:orientation="horizontal"
+            android:alignmentMode="alignMargins"
+            android:columnOrderPreserved="false">
+
+            <!-- Beauty Category -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/CategoryCard"
+                android:foreground="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
+                <LinearLayout
+                    style="@style/CategoryContent">
+                    <ImageView
+                        android:id="@+id/beautyCategory"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/ic_beauty"
+                        android:contentDescription="Beauty" />
+                    <TextView
+                        style="@style/CategoryLabel"
+                        android:text="Beauty" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Groceries Category -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/CategoryCard"
+                android:foreground="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
+                <LinearLayout
+                    style="@style/CategoryContent">
+                    <ImageView
+                        android:id="@+id/groceriesCategory"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/ic_groceries"
+                        android:contentDescription="Groceries" />
+                    <TextView
+                        style="@style/CategoryLabel"
+                        android:text="Groceries" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Snacks Category -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/CategoryCard"
+                android:foreground="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
+                <LinearLayout
+                    style="@style/CategoryContent">
+                    <ImageView
+                        android:id="@+id/snacksCategory"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/ic_snacks"
+                        android:contentDescription="Snacks" />
+                    <TextView
+                        style="@style/CategoryLabel"
+                        android:text="Snacks" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Household Category -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/CategoryCard"
+                android:foreground="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
+                <LinearLayout
+                    style="@style/CategoryContent">
+                    <ImageView
+                        android:id="@+id/householdCategory"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/ic_household"
+                        android:contentDescription="Household" />
+                    <TextView
+                        style="@style/CategoryLabel"
+                        android:text="Household" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Bakery Category -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/CategoryCard"
+                android:foreground="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
+                <LinearLayout
+                    style="@style/CategoryContent">
+                    <ImageView
+                        android:id="@+id/bakeryCategory"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/ic_bakery"
+                        android:contentDescription="Bakery" />
+                    <TextView
+                        style="@style/CategoryLabel"
+                        android:text="Bakery" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Dairy Category -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/CategoryCard"
+                android:foreground="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true">
+                <LinearLayout
+                    style="@style/CategoryContent">
+                    <ImageView
+                        android:id="@+id/dairyCategory"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/ic_dairy"
+                        android:contentDescription="Dairy" />
+                    <TextView
+                        style="@style/CategoryLabel"
+                        android:text="Dairy" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </GridLayout>
+
+    </ScrollView>
+
+    <!-- Bottom navigation bar with Home, Profile, Orders, Cart -->
+    <LinearLayout
+        android:id="@+id/bottomNavBar"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
         android:orientation="horizontal"
-        android:alignmentMode="alignMargins"
-        android:columnOrderPreserved="false">
+        android:background="#D81B60"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Beauty Category -->
-        <com.google.android.material.card.MaterialCardView
-            style="@style/CategoryCard"
-            android:foreground="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true">
+        <LinearLayout
+            android:id="@+id/homeCategory"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="4dp">
+            <ImageView
+                android:id="@+id/homeIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_home"
+                android:tint="#FFFFFF" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Home"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp" />
+        </LinearLayout>
 
-            <LinearLayout
-                style="@style/CategoryContent">
+        <LinearLayout
+            android:id="@+id/profileCategory"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="4dp">
+            <ImageView
+                android:id="@+id/profileIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_profile"
+                android:tint="#FFFFFF" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Profile"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp" />
+        </LinearLayout>
 
-                <ImageView
-                    android:id="@+id/beautyCategory"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/ic_beauty"
-                    android:contentDescription="Beauty" />
+        <LinearLayout
+            android:id="@+id/ordersCategory"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="4dp">
+            <ImageView
+                android:id="@+id/ordersIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_orders"
+                android:tint="#FFFFFF" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Orders"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp" />
+        </LinearLayout>
 
-                <TextView
-                    style="@style/CategoryLabel"
-                    android:text="Beauty" />
+        <LinearLayout
+            android:id="@+id/cartCategory"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="4dp">
+            <ImageView
+                android:id="@+id/cartIcon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_cart"
+                android:tint="#FFFFFF" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cart"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp" />
+        </LinearLayout>
 
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
 
-        <!-- Cart Category -->
-        <com.google.android.material.card.MaterialCardView
-            style="@style/CategoryCard"
-            android:foreground="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true">
-
-            <LinearLayout
-                style="@style/CategoryContent">
-
-                <ImageView
-                    android:id="@+id/cartCategory"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/ic_cart"
-                    android:contentDescription="Cart" />
-
-                <TextView
-                    style="@style/CategoryLabel"
-                    android:text="Cart" />
-
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Groceries Category -->
-        <com.google.android.material.card.MaterialCardView
-            style="@style/CategoryCard"
-            android:foreground="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true">
-
-            <LinearLayout
-                style="@style/CategoryContent">
-
-                <ImageView
-                    android:id="@+id/groceriesCategory"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/ic_groceries"
-                    android:contentDescription="Groceries" />
-
-                <TextView
-                    style="@style/CategoryLabel"
-                    android:text="Groceries" />
-
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Home Category -->
-        <com.google.android.material.card.MaterialCardView
-            style="@style/CategoryCard"
-            android:foreground="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true">
-
-            <LinearLayout
-                style="@style/CategoryContent">
-
-                <ImageView
-                    android:id="@+id/homeCategory"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/ic_home"
-                    android:contentDescription="Home" />
-
-                <TextView
-                    style="@style/CategoryLabel"
-                    android:text="Home" />
-
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Household Category -->
-        <com.google.android.material.card.MaterialCardView
-            style="@style/CategoryCard"
-            android:foreground="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true">
-
-            <LinearLayout
-                style="@style/CategoryContent">
-
-                <ImageView
-                    android:id="@+id/householdCategory"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/ic_household"
-                    android:contentDescription="Household" />
-
-                <TextView
-                    style="@style/CategoryLabel"
-                    android:text="Household" />
-
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Orders Category -->
-        <com.google.android.material.card.MaterialCardView
-            style="@style/CategoryCard"
-            android:foreground="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true">
-
-            <LinearLayout
-                style="@style/CategoryContent">
-
-                <ImageView
-                    android:id="@+id/ordersCategory"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/ic_orders"
-                    android:contentDescription="Orders" />
-
-                <TextView
-                    style="@style/CategoryLabel"
-                    android:text="Orders" />
-
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Profile Category -->
-        <com.google.android.material.card.MaterialCardView
-            style="@style/CategoryCard"
-            android:foreground="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true">
-
-            <LinearLayout
-                style="@style/CategoryContent">
-
-                <ImageView
-                    android:id="@+id/profileCategory"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/ic_profile"
-                    android:contentDescription="Profile" />
-
-                <TextView
-                    style="@style/CategoryLabel"
-                    android:text="Profile" />
-
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Snacks Category -->
-        <com.google.android.material.card.MaterialCardView
-            style="@style/CategoryCard"
-            android:foreground="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true">
-
-            <LinearLayout
-                style="@style/CategoryContent">
-
-                <ImageView
-                    android:id="@+id/snacksCategory"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/ic_snacks"
-                    android:contentDescription="Snacks" />
-
-                <TextView
-                    style="@style/CategoryLabel"
-                    android:text="Snacks" />
-
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-    </GridLayout>
-
-</ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
