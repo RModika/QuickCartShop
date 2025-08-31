@@ -16,7 +16,7 @@ import retrofit2.Response;
 import za.ac.cput.R;
 import za.ac.cput.model.Product;
 import za.ac.cput.services.ProductApiService;
-import za.ac.cput.services.RetrofitClient;
+import za.ac.cput.services.ApiClient;
 import za.ac.cput.adapters.ProductAdapter;
 
 public class ProductsActivity extends AppCompatActivity {
@@ -32,7 +32,7 @@ public class ProductsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products);
 
-        productApiService = RetrofitClient.getProductApiService();
+        productApiService = ApiClient.getProductApiService();
         productsRecyclerView = findViewById(R.id.productsRecyclerView);
 
         // Get category ID from intent

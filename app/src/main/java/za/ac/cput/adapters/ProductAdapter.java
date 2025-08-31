@@ -21,7 +21,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     public void setProducts(List<Product> products) {
         this.products = products;
-        notifyDataSetChanged(); // Add this to refresh the adapter
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -60,13 +60,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
             productPrice.setText(String.format("R%.2f", product.getProductPrice()));
             productDescription.setText(product.getProductDescription());
 
-            // Load image from your backend API
+
             loadProductImage(product.getProductId());
         }
 
         private void loadProductImage(Long productId) {
             if (productId == null) {
-                // Fallback to placeholder if no product ID
                 Glide.with(itemView.getContext())
                         .load(R.drawable.placeholder_image)
                         .into(productImage);

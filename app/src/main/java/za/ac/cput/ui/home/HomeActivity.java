@@ -22,9 +22,9 @@ import retrofit2.Response;
 import za.ac.cput.R;
 import za.ac.cput.model.Category;
 import za.ac.cput.services.CategoryApiService;
-import za.ac.cput.services.RetrofitClient;
+import za.ac.cput.services.ApiClient;
 import za.ac.cput.ui.auth.CartActivity;
-import za.ac.cput.ui.product.ProductsActivity; // Add this import
+import za.ac.cput.ui.product.ProductsActivity;
 
 import java.util.List;
 
@@ -40,7 +40,7 @@ public class HomeActivity extends AppCompatActivity {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         setContentView(R.layout.activity_home);
 
-        categoryApiService = RetrofitClient.getCategoryApiService();
+        categoryApiService = ApiClient.getCategoryApiService();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -48,51 +48,30 @@ public class HomeActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Set up all click listeners
-//        setupCategoryClicks();
-//
-//        // Load categories from API
+
         loadCategoriesFromApi();
 
-        setCategoryClick(R.id.groceriesCategory, "Groceries");
-        setCategoryClick(R.id.householdCategory, "Household");
-        setCategoryClick(R.id.beautyCategory, "Beauty");
-        setCategoryClick(R.id.snacksCategory, "Snacks");
-        setCategoryClick(R.id.bakeryCategory, "Bakery");
-        setCategoryClick(R.id.dairyCategory, "Dairy");
-//        setCategoryClick(R.id.ordersCategory, "Orders");
-//        setCategoryClick(R.id.profileCategory, "Profile");
-//        setCategoryClick(R.id.cartCategory, "Cart");
-//        setCategoryClick(R.id.homeCategory, "Home");
+
         setBottomNavigationClicks();
     }
 
-    // Add this method anywhere in your class
     private void setBottomNavigationClicks() {
         ImageView homeIcon = findViewById(R.id.homeIcon);
         ImageView profileIcon = findViewById(R.id.profileIcon);
         ImageView ordersIcon = findViewById(R.id.ordersIcon);
         ImageView cartIcon = findViewById(R.id.cartIcon);
 
-        homeIcon.setOnClickListener(v -> {
-            // Handle home icon click
-            Toast.makeText(this, "Home clicked", Toast.LENGTH_SHORT).show();
-        });
+        homeIcon.setOnClickListener(v ->
+                Toast.makeText(this, "Home clicked", Toast.LENGTH_SHORT).show());
 
-        profileIcon.setOnClickListener(v -> {
-            // Handle profile icon click
-            Toast.makeText(this, "Profile clicked", Toast.LENGTH_SHORT).show();
-        });
+        profileIcon.setOnClickListener(v ->
+                Toast.makeText(this, "Profile clicked", Toast.LENGTH_SHORT).show());
 
-        ordersIcon.setOnClickListener(v -> {
-            // Handle orders icon click
-            startActivity(new Intent(HomeActivity.this, OrdersActivity.class));
-        });
+        ordersIcon.setOnClickListener(v ->
+                startActivity(new Intent(HomeActivity.this, OrdersActivity.class)));
 
-        cartIcon.setOnClickListener(v -> {
-            // Handle cart icon click
-            startActivity(new Intent(HomeActivity.this, CartActivity.class));
-        });
+        cartIcon.setOnClickListener(v ->
+                startActivity(new Intent(HomeActivity.this, CartActivity.class)));
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -105,7 +84,6 @@ public class HomeActivity extends AppCompatActivity {
                         Animation scaleDown = AnimationUtils.loadAnimation(this, R.anim.scale_down);
                         v.startAnimation(scaleDown);
                         return true;
-
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
                         Animation scaleUp = AnimationUtils.loadAnimation(this, R.anim.scale_up);
@@ -116,33 +94,9 @@ public class HomeActivity extends AppCompatActivity {
                 return false;
             });
 
-            categoryView.setOnClickListener(v -> {
-                switch (displayName) {
-                    case "Orders":
-                        startActivity(new Intent(HomeActivity.this, OrdersActivity.class));
-                        break;
-                    case "Cart":
-                        startActivity(new Intent(HomeActivity.this, CartActivity.class));
-                        break;
-                    default:
-                        Toast.makeText(this, displayName + " clicked", Toast.LENGTH_SHORT).show();
-                        break;
-                }
-            });
+            categoryView.setOnClickListener(v -> handleCategoryClick(displayName));
         }
     }
-
-//    private void setupCategoryClicks() {
-//        // Map your UI elements to EXACT backend category names
-//        setCategoryClick(R.id.groceriesCategory, "Groceries");
-//        setCategoryClick(R.id.householdCategory, "Household");
-//        setCategoryClick(R.id.beautyCategory, "Beauty");
-//        setCategoryClick(R.id.snacksCategory, "Snacks");
-//        setCategoryClick(R.id.ordersCategory, "Orders");
-//        setCategoryClick(R.id.profileCategory, "Profile");
-//        setCategoryClick(R.id.cartCategory, "Cart");
-//        setCategoryClick(R.id.homeCategory, "Home");
-//    }
 
     private void loadCategoriesFromApi() {
         Call<List<Category>> call = categoryApiService.getAllCategories();
@@ -154,11 +108,16 @@ public class HomeActivity extends AppCompatActivity {
                     loadedCategories = response.body();
                     Log.d(TAG, "API Success! Loaded " + loadedCategories.size() + " categories");
 
-                    // Debug: Print all categories from backend
                     for (Category category : loadedCategories) {
                         Log.d(TAG, "BACKEND CATEGORY: " + category.getName() +
                                 " - " + category.getDescription());
                     }
+
+
+                    updateCategoryUI();
+
+
+                    enableCategoryClicks();
 
                     Toast.makeText(HomeActivity.this,
                             "Connected to backend! " + loadedCategories.size() + " categories loaded",
@@ -182,27 +141,48 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    private void updateCategoryUI() {
+        toggleCategoryVisibility(R.id.groceriesCategory, "Groceries");
+        toggleCategoryVisibility(R.id.householdCategory, "Household");
+        toggleCategoryVisibility(R.id.beautyCategory, "Beauty");
+        toggleCategoryVisibility(R.id.snacksCategory, "Snacks");
+        toggleCategoryVisibility(R.id.dairyCategory, "Dairy");
+        toggleCategoryVisibility(R.id.bakeryCategory, "Bakery");
+    }
+
+    private void toggleCategoryVisibility(int viewId, String categoryName) {
+        ImageView categoryView = findViewById(viewId);
+        if (categoryView != null) {
+            Category found = findCategoryByName(categoryName);
+            if (found == null) {
+                categoryView.setVisibility(ImageView.GONE);
+            } else {
+                categoryView.setVisibility(ImageView.VISIBLE);
+            }
+        }
+    }
+
+    private void enableCategoryClicks() {
+        setCategoryClick(R.id.groceriesCategory, "Groceries");
+        setCategoryClick(R.id.householdCategory, "Household");
+        setCategoryClick(R.id.beautyCategory, "Beauty");
+        setCategoryClick(R.id.snacksCategory, "Snacks");
+        setCategoryClick(R.id.bakeryCategory, "Bakery");
+        setCategoryClick(R.id.dairyCategory, "Dairy");
+    }
+
     private void handleCategoryClick(String categoryName) {
         Log.d(TAG, "User clicked: " + categoryName);
 
-        if (loadedCategories != null) {
-            Category foundCategory = findCategoryByName(categoryName);
+        Category foundCategory = findCategoryByName(categoryName);
 
-            if (foundCategory != null) {
-                // Navigate to products activity
-                showCategoryDetails(foundCategory);
-            } else {
-                // This category exists in UI but not in backend
-                Toast.makeText(this,
-                        categoryName + " - Category coming soon!",
-                        Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "Category not in backend: " + categoryName);
-            }
+        if (foundCategory != null) {
+            showCategoryDetails(foundCategory);
         } else {
-            // API not loaded yet
             Toast.makeText(this,
-                    categoryName + " - Loading...",
+                    categoryName + " - Category coming soon!",
                     Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "Category not in backend: " + categoryName);
         }
     }
 
@@ -218,20 +198,14 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void showCategoryDetails(Category category) {
-        String message = category.getName() + "\n" + category.getDescription();
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        Log.d(TAG, "Showing category: " + category.getName() + " - " + category.getDescription());
 
-        Log.d(TAG, "Showing category: " + category.getName() +
-                " - " + category.getDescription());
-
-        // Navigate to products activity for this category
-        Intent intent = new Intent(this, ProductsActivity.class);
-        intent.putExtra("CATEGORY_ID", category.getCategoryId());
+        Intent intent = new Intent(HomeActivity.this, ProductsActivity.class);
+        intent.putExtra("CATEGORY_ID", category.getCategoryId()); // Matches backend
         intent.putExtra("CATEGORY_NAME", category.getName());
         startActivity(intent);
     }
 
-    // Add this to see what's happening in Logcat
     private void checkBackendCategories() {
         if (loadedCategories != null) {
             Log.d(TAG, "=== BACKEND CATEGORIES AVAILABLE ===");

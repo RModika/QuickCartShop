@@ -19,9 +19,6 @@ public class Product {
     @SerializedName("stockAvailability")
     private String stockAvailability;
 
-//    @SerializedName("image")
-//    private byte[] image;
-
     @SerializedName("category")
     private Category category;
 
@@ -35,11 +32,9 @@ public class Product {
         this.productDescription = productDescription;
         this.productPrice = productPrice;
         this.stockAvailability = stockAvailability;
-//        this.image = image;
         this.category = category;
     }
 
-    // Getters and Setters
     public Long getProductId() { return productId; }
     public void setProductId(Long productId) { this.productId = productId; }
 
@@ -55,8 +50,7 @@ public class Product {
     public String getStockAvailability() { return stockAvailability; }
     public void setStockAvailability(String stockAvailability) { this.stockAvailability = stockAvailability; }
 
-//    public byte[] getImage() { return image; }
-//    public void setImage(byte[] image) { this.image = image; }
+
 
     public Category getCategory() { return category; }
     public void setCategory(Category category) { this.category = category; }
