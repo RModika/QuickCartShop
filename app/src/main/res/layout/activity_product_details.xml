@@ -40,6 +40,16 @@
             android:layout_marginTop="8dp"
             android:text="R99.99" />
 
+
+        <TextView
+            android:id="@+id/productStockStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/accent_pink"
+            android:textSize="16sp"
+            android:layout_marginTop="8dp"
+            android:text="Stock: Available" />
+
         <TextView
             android:id="@+id/productDetailDescription"
             android:layout_width="match_parent"

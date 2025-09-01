@@ -30,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText editEmail, editPassword;
     Button btnLogin;
     TextView registerText;
-    ProgressBar progressBar;  // <-- Add ProgressBar
+    ProgressBar progressBar;
     UsersApi usersApi;
 
     @Override
@@ -45,23 +45,23 @@ public class LoginActivity extends AppCompatActivity {
             return insets;
         });
 
-        // UI Components
+
         registerText = findViewById(R.id.textRegister);
         editEmail = findViewById(R.id.editEmail);
         editPassword = findViewById(R.id.editPassword);
         btnLogin = findViewById(R.id.btnLogin);
         progressBar = findViewById(R.id.progressBar);  // <-- Initialize ProgressBar
 
-        // Navigate to Register
+
         registerText.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
             startActivity(intent);
         });
 
-        // Retrofit API Init
+
         usersApi = ApiClient.getClient().create(UsersApi.class);
 
-        // Login Button Listener
+
         btnLogin.setOnClickListener(view -> {
             String email = editEmail.getText().toString().trim();
             String password = editPassword.getText().toString().trim();
