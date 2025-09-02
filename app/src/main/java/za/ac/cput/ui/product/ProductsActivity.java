@@ -35,7 +35,7 @@ public class ProductsActivity extends AppCompatActivity {
         productApiService = ApiClient.getProductApiService();
         productsRecyclerView = findViewById(R.id.productsRecyclerView);
 
-        // Get category ID from intent
+
         categoryId = getIntent().getLongExtra("CATEGORY_ID", -1);
         String categoryName = getIntent().getStringExtra("CATEGORY_NAME");
 
@@ -43,12 +43,12 @@ public class ProductsActivity extends AppCompatActivity {
             getSupportActionBar().setTitle(categoryName);
         }
 
-        // Setup RecyclerView
+
         productsRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         productAdapter = new ProductAdapter();
         productsRecyclerView.setAdapter(productAdapter);
 
-        // Load products
+
         loadProducts();
     }
 
