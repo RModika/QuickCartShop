@@ -1,121 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:orientation="vertical">
 
-    <LinearLayout
+    <!-- Toolbar with Back Button -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/paymentToolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:elevation="4dp" />
 
-        <!-- Payment method buttons -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginBottom="20dp"
-            android:weightSum="3">
-
-            <Button
-                android:id="@+id/creditCardPayment"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:text="Credit Card"
-                android:layout_height="0dp"/>
-
-            <Button
-                android:id="@+id/paypalPayment"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:text="PayPal"
-                android:layout_height="0dp"/>
-
-            <Button
-                android:id="@+id/walletPayment"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:text="Wallet"
-                android:layout_height="0dp"/>
-
-        </LinearLayout>
-
-        <!-- Credit Card Fields -->
-        <LinearLayout
-            android:id="@+id/cardFields"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="gone"
-            android:padding="8dp"
-            android:background="#f0f0f0">
+            android:gravity="center_horizontal">
 
-            <EditText
-                android:id="@+id/etCardNumber"
+            <!-- Payment Method Spinner -->
+            <Spinner
+                android:id="@+id/spinnerPaymentMethod"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Card Number"
+                android:spinnerMode="dropdown" />
+
+            <!-- Order ID Input -->
+            <EditText
+                android:id="@+id/edtOrderId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter Order ID"
                 android:inputType="number" />
 
+            <!-- Card Last 4 Digits Input -->
             <EditText
-                android:id="@+id/etExpiry"
+                android:id="@+id/edtCardDigits"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Expiry Date (MM/YY)"
-                android:inputType="text" />
+                android:hint="Card Last 4 Digits"
+                android:inputType="numberPassword"
+                android:maxLength="4" />
 
+            <!-- Bank Name Input -->
             <EditText
-                android:id="@+id/etCVV"
+                android:id="@+id/edtBankName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="CVV"
-                android:inputType="numberPassword" />
+                android:hint="Bank Name"
+                android:inputType="textPersonName" />
+
+            <!-- Total Amount Display -->
+            <TextView
+                android:id="@+id/txtTotalAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total Amount: R0.00"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:paddingTop="12dp" />
+
+            <!-- Submit Button -->
+            <Button
+                android:id="@+id/btnPay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Submit Payment" />
+
+            <!-- Result TextView -->
+            <TextView
+                android:id="@+id/txtResult"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@android:color/holo_green_dark"
+                android:paddingTop="12dp"
+                android:textSize="14sp" />
+
         </LinearLayout>
-
-        <!-- PayPal Fields -->
-        <LinearLayout
-            android:id="@+id/paypalFields"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone"
-            android:padding="8dp"
-            android:background="#f0f0f0">
-
-            <EditText
-                android:id="@+id/etPaypalEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="PayPal Email"
-                android:inputType="textEmailAddress" />
-        </LinearLayout>
-
-        <!-- Wallet Fields -->
-        <LinearLayout
-            android:id="@+id/walletFields"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone"
-            android:padding="8dp"
-            android:background="#f0f0f0">
-
-            <EditText
-                android:id="@+id/etWalletId"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Wallet ID"
-                android:inputType="text" />
-        </LinearLayout>
-
-        <!-- Pay Now Button -->
-        <Button
-            android:id="@+id/payNowButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Pay Now"
-            android:layout_marginTop="20dp" />
-
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</LinearLayout>
