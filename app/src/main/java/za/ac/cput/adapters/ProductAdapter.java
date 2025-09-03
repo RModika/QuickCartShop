@@ -93,7 +93,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                     .load(imageUrl)
                     .placeholder(R.drawable.placeholder_image)
                     .error(R.drawable.placeholder_image)
+                    .skipMemoryCache(true)
+                    .diskCacheStrategy(com.bumptech.glide.load.engine.DiskCacheStrategy.NONE)
                     .into(productImage);
         }
     }
-}
+    }
