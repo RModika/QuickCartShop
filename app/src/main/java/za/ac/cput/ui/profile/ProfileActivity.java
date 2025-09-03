@@ -13,26 +13,26 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.IOException;
-
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import za.ac.cput.R;
+import za.ac.cput.model.User;
+import za.ac.cput.services.ApiClient;
+import za.ac.cput.services.UsersApi;
+import za.ac.cput.ui.auth.CartActivity;
 import za.ac.cput.ui.auth.LoginActivity;
 import za.ac.cput.ui.home.HomeActivity;
 import za.ac.cput.ui.home.OrdersActivity;
-import za.ac.cput.ui.auth.CartActivity;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private EditText etName, etEmail, etPassword;
-    private Button btnUpdate;
-    private ProgressBar progressBar;
+    private EditText etName, etEmail;
+    private EditText etOldPassword, etNewPassword, etConfirmPassword;
 
-    private static final String UPDATE_URL = "http://10.0.2.2:8080/mobileApp/users/update";
-    private OkHttpClient client = new OkHttpClient();
+    private Button btnEditProfile, btnUpdateProfile;
+    private ProgressBar progressBar;
+    private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,112 +41,204 @@ public class ProfileActivity extends AppCompatActivity {
 
         etName = findViewById(R.id.editFullName);
         etEmail = findViewById(R.id.editEmail);
-        etPassword = findViewById(R.id.editPassword);
-        btnUpdate = findViewById(R.id.btnUpdate);
+        etOldPassword = findViewById(R.id.editOldPassword);
+        etNewPassword = findViewById(R.id.editNewPassword);
+        etConfirmPassword = findViewById(R.id.editConfirmPassword);
+
+        btnEditProfile = findViewById(R.id.btnEditProfile);
+        btnUpdateProfile = findViewById(R.id.btnUpdateProfile);
         progressBar = findViewById(R.id.progressBar);
+
+        prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
 
         preloadUserInfo();
 
-        btnUpdate.setOnClickListener(v -> updateProfile());
+        // Start with editing disabled and password fields hidden
+        setEditingEnabled(false);
+        togglePasswordFields(false);
+        btnUpdateProfile.setVisibility(View.GONE);
+
+        btnEditProfile.setOnClickListener(v -> {
+            setEditingEnabled(true);
+            togglePasswordFields(true);
+            btnEditProfile.setVisibility(View.GONE);
+            btnUpdateProfile.setVisibility(View.VISIBLE);
+        });
+
+        btnUpdateProfile.setOnClickListener(v -> updateProfile());
 
         setBottomNavigationClicks();
     }
 
+    private void setEditingEnabled(boolean enabled) {
+        etName.setEnabled(enabled);
+        etEmail.setEnabled(enabled);
+    }
+
+    private void togglePasswordFields(boolean visible) {
+        int visibility = visible ? View.VISIBLE : View.GONE;
+        etOldPassword.setVisibility(visibility);
+        etNewPassword.setVisibility(visibility);
+        etConfirmPassword.setVisibility(visibility);
+
+        if (!visible) {
+            etOldPassword.setText("");
+            etNewPassword.setText("");
+            etConfirmPassword.setText("");
+        }
+    }
+
     private void preloadUserInfo() {
-        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        String name = prefs.getString("name", "");
+        Long userId = prefs.getLong("userId", -1);
         String email = prefs.getString("email", "");
         String password = prefs.getString("password", "");
 
-        etName.setText(name);
-        etEmail.setText(email);
-        etPassword.setText(password);
-    }
-
-    private void updateProfile() {
-        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-
-        Long userId = prefs.getLong("userId", -1L);
-        String phoneNumber = prefs.getString("phoneNumber", "");
-
-        String name = etName.getText().toString().trim();
-        String email = etEmail.getText().toString().trim();
-        String password = etPassword.getText().toString().trim();
-
-        if (userId == -1 || TextUtils.isEmpty(phoneNumber)) {
-            Toast.makeText(this, "User not logged in. Please login again.", Toast.LENGTH_SHORT).show();
+        if (userId == -1 || email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(ProfileActivity.this, "User not logged in", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
             finish();
             return;
         }
 
-        if (TextUtils.isEmpty(name)) {
-            etName.setError("Name is required");
-            return;
-        }
-        if (TextUtils.isEmpty(email)) {
-            etEmail.setError("Email is required");
-            return;
-        }
-        if (TextUtils.isEmpty(password)) {
-            etPassword.setError("Password is required");
-            return;
-        }
+        UsersApi usersApi = ApiClient.getClientWithBasicAuth(email, password).create(UsersApi.class);
+        Call<User> call = usersApi.getUserById(userId);
 
-        progressBar.setVisibility(View.VISIBLE);
-
-        String json = "{"
-                + "\"userId\":" + userId + ","
-                + "\"name\":\"" + name + "\","
-                + "\"email\":\"" + email + "\","
-                + "\"password\":\"" + password + "\","
-                + "\"phoneNumber\":\"" + phoneNumber + "\""
-                + "}";
-
-        Request request = new Request.Builder()
-                .url(UPDATE_URL)
-                .put(okhttp3.RequestBody.create(
-                        okhttp3.MediaType.parse("application/json; charset=utf-8"),
-                        json
-                ))
-                .build();
-
-        client.newCall(request).enqueue(new okhttp3.Callback() {
+        call.enqueue(new Callback<User>() {
             @Override
-            public void onFailure(okhttp3.Call call, IOException e) {
-                runOnUiThread(() -> {
-                    progressBar.setVisibility(View.GONE);
-                    Toast.makeText(ProfileActivity.this, "Update failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                });
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    User user = response.body();
+
+                    etName.setText(user.getName() != null ? user.getName() : "");
+                    etEmail.setText(user.getEmail() != null ? user.getEmail() : "");
+
+                    SharedPreferences.Editor editor = prefs.edit();
+                    if (user.getName() != null) editor.putString("name", user.getName());
+                    if (user.getEmail() != null) editor.putString("email", user.getEmail());
+                    if (user.getPhoneNumber() != null) editor.putString("phoneNumber", user.getPhoneNumber());
+                    editor.apply();
+
+                } else {
+                    Toast.makeText(ProfileActivity.this, "Failed to load user info", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
-            public void onResponse(okhttp3.Call call, Response response) throws IOException {
-                runOnUiThread(() -> progressBar.setVisibility(View.GONE));
-
-                if (response.isSuccessful()) {
-                    // Save updated values
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.putString("name", name);
-                    editor.putString("email", email);
-                    editor.putString("password", password);
-                    editor.apply();
-
-                    runOnUiThread(() -> {
-                        Toast.makeText(ProfileActivity.this, "Profile updated successfully!", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(ProfileActivity.this, HomeActivity.class)); // or LoginActivity if that’s your flow
-                        finish();
-                    });
-                } else {
-                    runOnUiThread(() ->
-                            Toast.makeText(ProfileActivity.this, "Update failed: " + response.message(), Toast.LENGTH_LONG).show()
-                    );
-                }
+            public void onFailure(Call<User> call, Throwable t) {
+                Toast.makeText(ProfileActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    private void updateProfile() {
+        Long userId = prefs.getLong("userId", -1L);
+        String phoneNumber = prefs.getString("phoneNumber", "");
+        String storedEmail = prefs.getString("email", "");
+        String storedPassword = prefs.getString("password", "");
 
+        String nameInput = etName.getText().toString().trim();
+        String emailInput = etEmail.getText().toString().trim();
+
+        String oldPasswordInput = etOldPassword.getText().toString().trim();
+        String newPasswordInput = etNewPassword.getText().toString().trim();
+        String confirmPasswordInput = etConfirmPassword.getText().toString().trim();
+
+        if (userId == -1 || TextUtils.isEmpty(phoneNumber)) {
+            Toast.makeText(ProfileActivity.this, "User not logged in", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (TextUtils.isEmpty(nameInput) || TextUtils.isEmpty(emailInput)) {
+            Toast.makeText(ProfileActivity.this, "Name and Email cannot be empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Check if password change is intended
+        boolean changingPassword = !TextUtils.isEmpty(oldPasswordInput) ||
+                !TextUtils.isEmpty(newPasswordInput) ||
+                !TextUtils.isEmpty(confirmPasswordInput);
+
+        if (changingPassword) {
+            if (TextUtils.isEmpty(oldPasswordInput) ||
+                    TextUtils.isEmpty(newPasswordInput) ||
+                    TextUtils.isEmpty(confirmPasswordInput)) {
+                Toast.makeText(this, "Fill in all password fields to change password", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!oldPasswordInput.equals(storedPassword)) {
+                Toast.makeText(this, "Old password is incorrect", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!newPasswordInput.equals(confirmPasswordInput)) {
+                Toast.makeText(this, "New passwords do not match", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (newPasswordInput.length() < 6) {
+                Toast.makeText(this, "New password must be at least 6 characters", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
+        final String passwordToSave = changingPassword ? newPasswordInput : storedPassword;
+
+        progressBar.setVisibility(View.VISIBLE);
+
+        User updatedUser = new User();
+        updatedUser.setUserId(userId);
+        updatedUser.setName(nameInput);
+        updatedUser.setEmail(emailInput);
+        updatedUser.setPhoneNumber(phoneNumber);
+        updatedUser.setPassword(passwordToSave);
+
+        UsersApi usersApi = ApiClient.getClientWithBasicAuth(storedEmail, storedPassword).create(UsersApi.class);
+        Call<User> call = usersApi.updateUser(updatedUser);
+
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                progressBar.setVisibility(View.GONE);
+
+                if (response.isSuccessful() && response.body() != null) {
+                    User user = response.body();
+
+                    etName.setText(user.getName());
+                    etEmail.setText(user.getEmail());
+
+                    // Clear password fields
+                    etOldPassword.setText("");
+                    etNewPassword.setText("");
+                    etConfirmPassword.setText("");
+
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putString("name", user.getName());
+                    editor.putString("email", user.getEmail());
+                    editor.putString("phoneNumber", user.getPhoneNumber());
+                    editor.putString("password", passwordToSave);
+                    editor.apply();
+
+                    Toast.makeText(ProfileActivity.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
+
+                    // After success, disable editing & hide password fields
+                    setEditingEnabled(false);
+                    togglePasswordFields(false);
+                    btnEditProfile.setVisibility(View.VISIBLE);
+                    btnUpdateProfile.setVisibility(View.GONE);
+
+                } else {
+                    Toast.makeText(ProfileActivity.this, "Failed to update profile", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                Toast.makeText(ProfileActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     private void setBottomNavigationClicks() {
         ImageView homeIcon = findViewById(R.id.homeIcon);
@@ -159,9 +251,8 @@ public class ProfileActivity extends AppCompatActivity {
             finish();
         });
 
-        profileIcon.setOnClickListener(v -> {
-            Toast.makeText(this, "Profile clicked", Toast.LENGTH_SHORT).show();
-        });
+        profileIcon.setOnClickListener(v ->
+                Toast.makeText(ProfileActivity.this, "Profile clicked", Toast.LENGTH_SHORT).show());
 
         ordersIcon.setOnClickListener(v -> {
             startActivity(new Intent(ProfileActivity.this, OrdersActivity.class));

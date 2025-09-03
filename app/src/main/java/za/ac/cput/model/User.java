@@ -4,9 +4,10 @@ public class User {
     private Long userId;
     private String name;
     private String email;
-    private String password;
+    private String password;    // Only needed if you're returning it (not recommended)
     private String phoneNumber;
 
+    // Getters and Setters
     public Long getUserId() { return userId; }
     public void setUserId(Long userId) { this.userId = userId; }
 
