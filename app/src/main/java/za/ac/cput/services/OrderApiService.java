@@ -8,6 +8,6 @@ import za.ac.cput.model.CustomerOrder;
 
 public interface OrderApiService {
 
-    @GET("orders") // adjust the endpoint to your backend
+    @GET("orders")
     Call<List<CustomerOrder>> getOrders();
 }
