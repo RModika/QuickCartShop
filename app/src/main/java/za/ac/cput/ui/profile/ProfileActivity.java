@@ -53,7 +53,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         preloadUserInfo();
 
-        // Start with editing disabled and password fields hidden
         setEditingEnabled(false);
         togglePasswordFields(false);
         btnUpdateProfile.setVisibility(View.GONE);
@@ -153,7 +152,6 @@ public class ProfileActivity extends AppCompatActivity {
             return;
         }
 
-        // Check if password change is intended
         boolean changingPassword = !TextUtils.isEmpty(oldPasswordInput) ||
                 !TextUtils.isEmpty(newPasswordInput) ||
                 !TextUtils.isEmpty(confirmPasswordInput);
@@ -207,7 +205,6 @@ public class ProfileActivity extends AppCompatActivity {
                     etName.setText(user.getName());
                     etEmail.setText(user.getEmail());
 
-                    // Clear password fields
                     etOldPassword.setText("");
                     etNewPassword.setText("");
                     etConfirmPassword.setText("");
@@ -221,7 +218,6 @@ public class ProfileActivity extends AppCompatActivity {
 
                     Toast.makeText(ProfileActivity.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
 
-                    // After success, disable editing & hide password fields
                     setEditingEnabled(false);
                     togglePasswordFields(false);
                     btnEditProfile.setVisibility(View.VISIBLE);

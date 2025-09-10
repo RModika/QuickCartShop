@@ -20,8 +20,7 @@ public interface UsersApi {
     @GET("users/read/{userId}")
     Call<User> getUserById(@Path("userId") Long userId);
 
-    @PUT("users/update")
-    Call<User> updateUser(@Body User user);
+    @PUT("users/update")    Call<User> updateUser(@Body User user);
 
 
 }

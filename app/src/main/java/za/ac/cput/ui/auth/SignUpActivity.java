@@ -1,5 +1,5 @@
 package za.ac.cput.ui.auth;
-//
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,32 +11,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import za.ac.cput.R;
-
-import java.io.IOException;
+import za.ac.cput.model.User;
+import za.ac.cput.services.ApiClient;
+//import za.ac.cput.services.RetrofitClient;
+import za.ac.cput.services.UsersApi;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    private EditText etName, etEmail, etPassword, etConfirmPassword;
+    private EditText etName, etEmail, etPassword, etConfirmPassword, etPhoneNumber;
     private Button btnSignUp;
     private TextView btnGoToLogin;
     private ProgressBar progressBar;
-
-    private OkHttpClient client = new OkHttpClient();
-
-    // TODO: Replace with your actual backend URL for registration API
-    private static final String REGISTER_URL = "http://10.0.2.2:8080/mobileApp/users/create";
+    private UsersApi usersApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +38,12 @@ public class SignUpActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.editEmail);
         etPassword = findViewById(R.id.editPassword);
         etConfirmPassword = findViewById(R.id.editConfirmPassword);
+        etPhoneNumber = findViewById(R.id.editPhoneNumber);
         btnSignUp = findViewById(R.id.btnRegister);
         btnGoToLogin = findViewById(R.id.textBackToLogin);
         progressBar = findViewById(R.id.progressBar);
+
+        usersApi = ApiClient.getClient().create(UsersApi.class);
 
         progressBar.setVisibility(View.GONE);
 
@@ -66,8 +60,8 @@ public class SignUpActivity extends AppCompatActivity {
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
         String confirmPassword = etConfirmPassword.getText().toString().trim();
+        String phoneNumber = etPhoneNumber.getText().toString().trim();
 
-        // Validation
         if (TextUtils.isEmpty(name)) {
             etName.setError("Name is required");
             return;
@@ -91,51 +85,42 @@ public class SignUpActivity extends AppCompatActivity {
 
         progressBar.setVisibility(View.VISIBLE);
 
-        // Build POST request to backend
-        FormBody formBody = new FormBody.Builder()
-                .add("name", name)
-                .add("email", email)
-                .add("password", password)
-                .build();
+        User user = new User();
+        user.setName(name);
+        user.setEmail(email);
+        user.setPassword(password);
+        user.setPhoneNumber(phoneNumber);
 
-        Request request = new Request.Builder()
-                .url(REGISTER_URL)
-                .post(formBody)
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
+        Call<User> call = usersApi.registerUser(user);
+        call.enqueue(new Callback<User>() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                // Back to UI thread to update UI
-                runOnUiThread(() -> {
-                    progressBar.setVisibility(View.GONE);
-                    Toast.makeText(SignUpActivity.this, "Registration failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                });
+            public void onResponse(Call<User> call, Response<User> response) {
+                progressBar.setVisibility(View.GONE);
+
+                if (response.isSuccessful() && response.body() != null) {
+                    Toast.makeText(SignUpActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+                    finish();
+                } else {
+                    String errorBody = "";
+                    try {
+                        errorBody = response.errorBody().string();
+                    } catch (Exception e) {
+                        errorBody = "Unable to parse error: " + e.getMessage();
+                    }
+
+                    Toast.makeText(SignUpActivity.this,
+                            "Registration failed: " + response.code() + "\n" + errorBody,
+                            Toast.LENGTH_LONG).show();
+                }
             }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                runOnUiThread(() -> progressBar.setVisibility(View.GONE));
 
-                if (response.isSuccessful()) {
-                    String responseBody = "";
-                    try {
-                        responseBody = response.body().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    // You can parse your response if JSON, or just check success string
-                    runOnUiThread(() -> {
-                        Toast.makeText(SignUpActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
-                        finish();
-                    });
-                } else {
-                    final String errorMsg = response.message();
-                    runOnUiThread(() -> Toast.makeText(SignUpActivity.this, "Registration failed: " + errorMsg, Toast.LENGTH_LONG).show());
-                }
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                Toast.makeText(SignUpActivity.this, "Registration failed: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
-
 }

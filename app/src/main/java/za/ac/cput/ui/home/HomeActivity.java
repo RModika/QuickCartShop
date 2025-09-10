@@ -202,7 +202,7 @@ public class HomeActivity extends AppCompatActivity {
         Log.d(TAG, "Showing category: " + category.getName() + " - " + category.getDescription());
 
         Intent intent = new Intent(HomeActivity.this, ProductsActivity.class);
-        intent.putExtra("CATEGORY_ID", category.getCategoryId()); // Matches backend
+        intent.putExtra("CATEGORY_ID", category.getCategoryId());
         intent.putExtra("CATEGORY_NAME", category.getName());
         startActivity(intent);
     }
