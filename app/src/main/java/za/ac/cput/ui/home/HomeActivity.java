@@ -25,6 +25,7 @@ import za.ac.cput.services.CategoryApiService;
 import za.ac.cput.services.ApiClient;
 import za.ac.cput.ui.auth.CartActivity;
 import za.ac.cput.ui.product.ProductsActivity;
+import za.ac.cput.ui.profile.ProfileActivity;
 
 import java.util.List;
 
@@ -65,7 +66,7 @@ public class HomeActivity extends AppCompatActivity {
                 Toast.makeText(this, "Home clicked", Toast.LENGTH_SHORT).show());
 
         profileIcon.setOnClickListener(v ->
-                Toast.makeText(this, "Profile clicked", Toast.LENGTH_SHORT).show());
+                startActivity(new Intent(HomeActivity.this, ProfileActivity.class)));
 
         ordersIcon.setOnClickListener(v ->
                 startActivity(new Intent(HomeActivity.this, OrdersActivity.class)));
@@ -201,7 +202,7 @@ public class HomeActivity extends AppCompatActivity {
         Log.d(TAG, "Showing category: " + category.getName() + " - " + category.getDescription());
 
         Intent intent = new Intent(HomeActivity.this, ProductsActivity.class);
-        intent.putExtra("CATEGORY_ID", category.getCategoryId()); // Matches backend
+        intent.putExtra("CATEGORY_ID", category.getCategoryId());
         intent.putExtra("CATEGORY_NAME", category.getName());
         startActivity(intent);
     }
