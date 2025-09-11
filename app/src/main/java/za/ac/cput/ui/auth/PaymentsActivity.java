@@ -38,7 +38,6 @@ public class PaymentsActivity extends AppCompatActivity {
     private PaymentApiService paymentApiService;
     private OrderApiService orderApiService;
 
-    private final long TEST_ORDER_ID = 12345; // for testing
     private double totalAmount = 0.0;
 
     @Override
@@ -98,22 +97,14 @@ public class PaymentsActivity extends AppCompatActivity {
                     txtTotalAmount.setText("Total Amount: R" + String.format("%.2f", totalAmount));
                 } else {
                     Toast.makeText(PaymentsActivity.this, "Failed to fetch order details", Toast.LENGTH_SHORT).show();
-                    useTestOrderId();
                 }
             }
 
             @Override
             public void onFailure(Call<List<CustomerOrder>> call, Throwable t) {
                 Toast.makeText(PaymentsActivity.this, "Failed to connect to backend", Toast.LENGTH_SHORT).show();
-                useTestOrderId();
             }
         });
-    }
-
-    private void useTestOrderId() {
-        edtOrderId.setText(String.valueOf(TEST_ORDER_ID));
-        totalAmount = 250.00; // example amount
-        txtTotalAmount.setText("Total Amount: R" + String.format("%.2f", totalAmount));
     }
 
     private void processPayment() {
