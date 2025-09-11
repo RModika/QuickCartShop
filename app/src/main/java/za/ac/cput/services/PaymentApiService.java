@@ -13,7 +13,7 @@ import za.ac.cput.model.PaymentDetails;
 
 public interface PaymentApiService {
 
-    // -------- Payment Endpoints --------
+    // -------- Payment Endpoints --------//
     @POST("/payment/create")
     Call<Payment> createPayment(@Body Payment payment);
 

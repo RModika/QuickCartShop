@@ -59,14 +59,14 @@ public class PaymentsActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
-
+////Testing for github
         spinnerMethod = findViewById(R.id.spinnerPaymentMethod);
         edtOrderId = findViewById(R.id.edtOrderId);
         edtCardDigits = findViewById(R.id.edtCardDigits);
         edtBankName = findViewById(R.id.edtBankName);
         txtResult = findViewById(R.id.txtResult);
         txtTotalAmount = findViewById(R.id.txtTotalAmount);
-        btnPay = findViewById(R.id.btnPay);
+       // btnPay = findViewById(R.id.btnPay);
 
         String[] methods = {"Credit Card", "Debit Card"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, methods);
