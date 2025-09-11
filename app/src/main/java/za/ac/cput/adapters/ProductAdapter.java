@@ -87,7 +87,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                 return;
             }
 
-            String imageUrl = "http://10.0.2.2:8080/Product/image/" + productId;
+            String imageUrl = "http://10.0.2.2:8080/mobileApp/Product/image/" + productId;
 
             Glide.with(itemView.getContext())
                     .load(imageUrl)
