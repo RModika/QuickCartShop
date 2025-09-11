@@ -3,7 +3,7 @@ package za.ac.cput.model;
 import com.google.gson.annotations.SerializedName;
 
 import java.time.LocalDateTime;
-
+//Payments Model Class
 public class Payment {
     @SerializedName("paymentId")
     private Long paymentId;

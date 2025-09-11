@@ -1,7 +1,7 @@
 package za.ac.cput.model;
 
 import com.google.gson.annotations.SerializedName;
-
+//payment details model class
 public class PaymentDetails {
     @SerializedName("paymentDetailsId")
     private Long paymentDetailsId;
