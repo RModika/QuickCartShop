@@ -18,12 +18,11 @@ import retrofit2.Response;
 import za.ac.cput.R;
 import za.ac.cput.model.User;
 import za.ac.cput.services.ApiClient;
-//import za.ac.cput.services.RetrofitClient;
 import za.ac.cput.services.UsersApi;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    private EditText etName, etEmail, etPassword, etConfirmPassword, etPhoneNumber;
+    private EditText etFirstName, etSurname, etEmail, etPassword, etConfirmPassword, etPhoneNumber;
     private Button btnSignUp;
     private TextView btnGoToLogin;
     private ProgressBar progressBar;
@@ -34,7 +33,8 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        etName = findViewById(R.id.editFullName);
+        etFirstName = findViewById(R.id.editFirstName);
+        etSurname = findViewById(R.id.editSurname);
         etEmail = findViewById(R.id.editEmail);
         etPassword = findViewById(R.id.editPassword);
         etConfirmPassword = findViewById(R.id.editConfirmPassword);
@@ -43,7 +43,7 @@ public class SignUpActivity extends AppCompatActivity {
         btnGoToLogin = findViewById(R.id.textBackToLogin);
         progressBar = findViewById(R.id.progressBar);
 
-        usersApi = ApiClient.getClient().create(UsersApi.class);
+        usersApi = ApiClient.getUsersApi(this);
 
         progressBar.setVisibility(View.GONE);
 
@@ -56,14 +56,19 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void registerUser() {
-        String name = etName.getText().toString().trim();
+        String firstName = etFirstName.getText().toString().trim();
+        String surname = etSurname.getText().toString().trim();
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
         String confirmPassword = etConfirmPassword.getText().toString().trim();
         String phoneNumber = etPhoneNumber.getText().toString().trim();
 
-        if (TextUtils.isEmpty(name)) {
-            etName.setError("Name is required");
+        if (TextUtils.isEmpty(firstName)) {
+            etFirstName.setError("First name is required");
+            return;
+        }
+        if (TextUtils.isEmpty(surname)) {
+            etSurname.setError("Surname is required");
             return;
         }
         if (TextUtils.isEmpty(email)) {
@@ -86,7 +91,8 @@ public class SignUpActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
 
         User user = new User();
-        user.setName(name);
+        user.setFirstName(firstName);
+        user.setSurname(surname);
         user.setEmail(email);
         user.setPassword(password);
         user.setPhoneNumber(phoneNumber);
@@ -114,7 +120,6 @@ public class SignUpActivity extends AppCompatActivity {
                             Toast.LENGTH_LONG).show();
                 }
             }
-
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/soft_background"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/card_light"
+        android:elevation="4dp"
+        android:padding="16dp"
+        android:layout_margin="8dp"
+        android:layout_gravity="center">
+
+        <EditText
+            android:id="@+id/etStreetNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Street Number"
+            android:textColor="@color/text_primary"
+            android:backgroundTint="@color/accent_pink"
+            android:layout_marginBottom="12dp" />
+
+        <EditText
+            android:id="@+id/etStreetName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Street Name"
+            android:textColor="@color/text_primary"
+            android:backgroundTint="@color/accent_pink"
+            android:layout_marginBottom="12dp" />
+
+        <EditText
+            android:id="@+id/etSuburb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Suburb"
+            android:textColor="@color/text_primary"
+            android:backgroundTint="@color/accent_pink"
+            android:layout_marginBottom="12dp" />
+
+        <EditText
+            android:id="@+id/etCity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="City"
+            android:textColor="@color/text_primary"
+            android:backgroundTint="@color/accent_pink"
+            android:layout_marginBottom="12dp" />
+
+        <EditText
+            android:id="@+id/etProvince"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Province"
+            android:textColor="@color/text_primary"
+            android:backgroundTint="@color/accent_pink"
+            android:layout_marginBottom="12dp" />
+
+        <EditText
+            android:id="@+id/etCountry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Country"
+            android:textColor="@color/text_primary"
+            android:backgroundTint="@color/accent_pink"
+            android:layout_marginBottom="12dp" />
+
+        <EditText
+            android:id="@+id/etPostalCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Postal Code"
+            android:inputType="number"
+            android:textColor="@color/text_primary"
+            android:backgroundTint="@color/accent_pink"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/btnSaveAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save Address"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/accent_pink"
+            android:layout_marginTop="16dp"
+            android:padding="12dp" />
+
+    </LinearLayout>
+</ScrollView>

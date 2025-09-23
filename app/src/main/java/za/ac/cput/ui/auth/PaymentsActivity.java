@@ -45,7 +45,6 @@ public class PaymentsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payments);
 
-        // Toolbar with back button
         Toolbar toolbar = findViewById(R.id.paymentToolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -59,14 +58,14 @@ public class PaymentsActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
-////Testing for github
+
         spinnerMethod = findViewById(R.id.spinnerPaymentMethod);
         edtOrderId = findViewById(R.id.edtOrderId);
         edtCardDigits = findViewById(R.id.edtCardDigits);
         edtBankName = findViewById(R.id.edtBankName);
         txtResult = findViewById(R.id.txtResult);
         txtTotalAmount = findViewById(R.id.txtTotalAmount);
-       // btnPay = findViewById(R.id.btnPay);
+        btnPay = findViewById(R.id.btnPay);
 
         String[] methods = {"Credit Card", "Debit Card"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, methods);
@@ -80,7 +79,6 @@ public class PaymentsActivity extends AppCompatActivity {
         paymentApiService = retrofit.create(PaymentApiService.class);
         orderApiService = retrofit.create(OrderApiService.class);
 
-        // Fetch order details from backend
         fetchOrderDetails();
 
         btnPay.setOnClickListener(v -> processPayment());

@@ -35,18 +35,31 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
 
-    <!-- Full Name -->
+    <!-- First Name -->
     <EditText
-        android:id="@+id/editFullName"
+        android:id="@+id/editFirstName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Full Name"
+        android:hint="First Name"
         android:inputType="textPersonName"
         android:backgroundTint="#D81B60"
         app:layout_constraintTop_toBottomOf="@id/textTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="24dp" />
+
+    <!-- Surname -->
+    <EditText
+        android:id="@+id/editSurname"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Surname"
+        android:inputType="textPersonName"
+        android:backgroundTint="#D81B60"
+        app:layout_constraintTop_toBottomOf="@id/editFirstName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
 
     <!-- Email -->
     <EditText
@@ -56,7 +69,7 @@
         android:hint="Email"
         android:inputType="textEmailAddress"
         android:backgroundTint="#D81B60"
-        app:layout_constraintTop_toBottomOf="@id/editFullName"
+        app:layout_constraintTop_toBottomOf="@id/editSurname"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
@@ -99,6 +112,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp" />
+
     <!-- Register Button -->
     <Button
         android:id="@+id/btnRegister"

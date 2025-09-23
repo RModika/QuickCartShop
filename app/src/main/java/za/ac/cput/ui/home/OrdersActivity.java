@@ -80,7 +80,7 @@ import retrofit2.Response;
 import za.ac.cput.R;
 import za.ac.cput.adapters.OrdersAdapter;
 import za.ac.cput.model.CustomerOrder;
-import za.ac.cput.services.OrderApi;
+import za.ac.cput.services.ApiClient;
 import za.ac.cput.services.OrderApiService;
 
 public class OrdersActivity extends AppCompatActivity {
@@ -102,7 +102,8 @@ public class OrdersActivity extends AppCompatActivity {
     }
 
     private void fetchOrders() {
-        OrderApiService orderApiService = OrderApi.getClient().create(OrderApiService.class);
+        OrderApiService orderApiService = ApiClient.getOrderApiService(this);
+
         Call<List<CustomerOrder>> call = orderApiService.getOrders();
         call.enqueue(new Callback<List<CustomerOrder>>() {
             @Override

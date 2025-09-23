@@ -21,15 +21,14 @@ import za.ac.cput.R;
 import za.ac.cput.model.User;
 import za.ac.cput.model.UserAuth;
 import za.ac.cput.services.ApiClient;
-//import za.ac.cput.services.RetrofitClient;
 import za.ac.cput.services.UsersApi;
 import za.ac.cput.ui.home.HomeActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
-    EditText editEmail, editPassword;
-    Button btnLogin;
-    UsersApi usersApi;
+    private EditText editEmail, editPassword;
+    private Button btnLogin;
+    private UsersApi usersApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,18 +42,18 @@ public class LoginActivity extends AppCompatActivity {
             return insets;
         });
 
-        // UI Components
         TextView registerText = findViewById(R.id.textRegister);
         editEmail = findViewById(R.id.editEmail);
         editPassword = findViewById(R.id.editPassword);
         btnLogin = findViewById(R.id.btnLogin);
 
+        usersApi = ApiClient.getClientWithBasicAuth(this).create(UsersApi.class);
+
+
         registerText.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
             startActivity(intent);
         });
-
-        usersApi = ApiClient.getClient().create(UsersApi.class);
 
         btnLogin.setOnClickListener(view -> {
             String email = editEmail.getText().toString().trim();
@@ -68,40 +67,46 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void performLogin(String email, String password) {
-        UserAuth loginRequest = new UserAuth(email, password);
+private void performLogin(String email, String password) {
+    UserAuth loginRequest = new UserAuth(email, password);
 
-        Call<User> call = usersApi.loginUser(loginRequest);
-        call.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    User user = response.body();
-                    Toast.makeText(LoginActivity.this, "Welcome " + user.getName(), Toast.LENGTH_LONG).show();
+    Call<User> call = usersApi.loginUser(loginRequest);
+    call.enqueue(new Callback<User>() {
+        @Override
+        public void onResponse(Call<User> call, Response<User> response) {
+            if (response.isSuccessful() && response.body() != null) {
+                User user = response.body();
 
-                    SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.putLong("userId", user.getUserId());
-                    editor.putString("name", user.getName());
-                    editor.putString("email", user.getEmail());
-                    editor.putString("password", password);
-                    editor.putString("phoneNumber", user.getPhoneNumber());
-                    editor.apply();
+                // Save user details to SharedPreferences (without cookie)
+                SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putLong("userId", user.getUserId());
+                editor.putString("firstName", user.getFirstName());
+                editor.putString("surname", user.getSurname());
+                editor.putString("email", user.getEmail());
+                editor.putString("password", password);  // Save password here for Basic Auth
+                editor.putString("phoneNumber", user.getPhoneNumber());
+                editor.apply();
 
-                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                    intent.putExtra("userName", user.getName());
-                    startActivity(intent);
-                    finish();
-                } else {
-                    Toast.makeText(LoginActivity.this, "Login failed. Check credentials.", Toast.LENGTH_SHORT).show();
-                }
+                Toast.makeText(LoginActivity.this, "Welcome " + user.getFirstName(), Toast.LENGTH_LONG).show();
+
+                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                intent.putExtra("firstName", user.getFirstName());
+                intent.putExtra("surname", user.getSurname());
+                startActivity(intent);
+                finish();
+            } else {
+                Toast.makeText(LoginActivity.this, "Login failed. Check credentials.", Toast.LENGTH_SHORT).show();
             }
+        }
 
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
+        @Override
+        public void onFailure(Call<User> call, Throwable t) {
+            Toast.makeText(LoginActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    });
 }
+
+}
+
+

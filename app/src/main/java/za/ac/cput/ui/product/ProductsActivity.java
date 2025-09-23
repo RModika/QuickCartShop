@@ -32,7 +32,9 @@ public class ProductsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products);
 
-        productApiService = ApiClient.getProductApiService();
+        // Initialize service
+        productApiService = ApiClient.getProductApiService(this);
+
         productsRecyclerView = findViewById(R.id.productsRecyclerView);
 
 

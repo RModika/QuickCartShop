@@ -48,7 +48,15 @@
         <activity android:name=".ui.profile.ProfileActivity" />
 
         <activity android:name=".ui.product.ProductDetailsActivity" />
+        <activity
+            android:name=".ui.auth.PaymentsActivity"
+            android:exported="true" />
 
+        <activity
+            android:name=".ui.product.AdminProductManagementActivity"
+            android:label="Manage Products"
+            android:exported="true"/>
+        <activity android:name=".ui.auth.AddressActivity" android:exported="true" />
 
     </application>
 
