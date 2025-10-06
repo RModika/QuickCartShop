@@ -50,8 +50,20 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
         updateUI();
 
         btnCheckout.setOnClickListener(view -> {
-            Intent intent = new Intent(CartActivity.this, AddressActivity.class);
-            startActivity(intent);
+            if (cartItems.isEmpty()) {
+                // Show popup: cart is empty
+                androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(CartActivity.this);
+                builder.setTitle("Cart Empty")
+                        .setMessage("Your cart is empty. Please add items before checkout.")
+                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                        .show();
+            } else {
+                // Proceed to AddressActivity
+                Intent intent = new Intent(CartActivity.this, AddressActivity.class);
+                startActivity(intent);
+            }
+//            Intent intent = new Intent(CartActivity.this, AddressActivity.class);
+//            startActivity(intent);
         });
 
     }
@@ -87,4 +99,15 @@ public class CartActivity extends AppCompatActivity implements CartAdapter.OnCar
         finish();
         return true;
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        cartItems = LocalCart.getCart(); // Refresh cart
+        adapter.setCartItems(cartItems);
+        adapter.notifyDataSetChanged();
+        updateUI();
+    }
+
+
 }

@@ -66,6 +66,7 @@
 package za.ac.cput.ui.home;
 
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -99,6 +100,15 @@ public class OrdersActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         fetchOrders();
+
+        // Back Button
+        ImageView btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(view -> {
+            // Go back to HomeActivity
+            finish(); // This closes OrdersActivity and returns to previous activity
+            // OR, if you want to explicitly open HomeActivity:
+            // startActivity(new Intent(OrdersActivity.this, HomeActivity.class));
+        });
     }
 
     private void fetchOrders() {
