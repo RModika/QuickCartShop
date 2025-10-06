@@ -125,6 +125,7 @@ import za.ac.cput.model.CartItem;
 import za.ac.cput.services.ApiClient;
 import za.ac.cput.services.CartApiService;
 import za.ac.cput.ui.auth.CartActivity;
+import za.ac.cput.util.FooterNavigationHelper;
 import za.ac.cput.util.LocalCart;
 
 import android.content.SharedPreferences;
@@ -147,6 +148,8 @@ public class ProductDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_details);
+
+        FooterNavigationHelper.setupFooterNavigation(this);
 
 //        cartApiService = ApiClient.getCartApiService();
         cartApiService = ApiClient.getCartApiService(this);
@@ -229,6 +232,7 @@ public class ProductDetailsActivity extends AppCompatActivity {
             startActivity(new Intent(ProductDetailsActivity.this, CartActivity.class));
         });
     }
+
 
 //    private void addToCart() {
 //        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);

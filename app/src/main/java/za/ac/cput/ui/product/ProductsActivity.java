@@ -18,6 +18,7 @@ import za.ac.cput.model.Product;
 import za.ac.cput.services.ProductApiService;
 import za.ac.cput.services.ApiClient;
 import za.ac.cput.adapters.ProductAdapter;
+import za.ac.cput.util.FooterNavigationHelper;
 
 public class ProductsActivity extends AppCompatActivity {
 
@@ -31,6 +32,8 @@ public class ProductsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_products);
+
+        FooterNavigationHelper.setupFooterNavigation(this);
 
         // Initialize service
         productApiService = ApiClient.getProductApiService(this);

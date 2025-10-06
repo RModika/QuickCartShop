@@ -134,6 +134,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         this.listener = listener;
     }
 
+    public void setCartItems(List<CartItem> items) {
+        this.cartItems = items;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public CartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

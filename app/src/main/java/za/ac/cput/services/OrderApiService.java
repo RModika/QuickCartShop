@@ -8,6 +8,9 @@ import za.ac.cput.model.CustomerOrder;
 
 public interface OrderApiService {
 
-    @GET("orders")
+    @GET("CustomerOrder/getAll")
     Call<List<CustomerOrder>> getOrders();
+
+//    @POST("CustomerOrder/create")
+//    Call<CustomerOrder> createOrder(@Body CustomerOrder order);
 }
