@@ -19,20 +19,9 @@
         android:layout_height="wrap_content" />
 
     <EditText
-        android:id="@+id/etProvince"
-        android:hint="Province"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <EditText
         android:id="@+id/etPostalCode"
         android:hint="Postal Code"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <EditText
-        android:id="@+id/etCountry"
-        android:hint="Country"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 </LinearLayout>

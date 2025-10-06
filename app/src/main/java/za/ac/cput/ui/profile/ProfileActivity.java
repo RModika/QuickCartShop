@@ -34,6 +34,7 @@ import za.ac.cput.ui.auth.CartActivity;
 import za.ac.cput.ui.auth.LoginActivity;
 import za.ac.cput.ui.home.HomeActivity;
 import za.ac.cput.ui.home.OrdersActivity;
+import za.ac.cput.util.FooterNavigationHelper;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -49,6 +50,8 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        FooterNavigationHelper.setupFooterNavigation(this);
 
         // Initialize views
         addressesContainer = findViewById(R.id.addressesContainer);
@@ -85,6 +88,86 @@ public class ProfileActivity extends AppCompatActivity {
 
         Button btnAddAddress = findViewById(R.id.btnAddAddress);
         btnAddAddress.setOnClickListener(v -> showAddAddressDialog());
+
+        Button logoutButton = findViewById(R.id.btnLogout);
+
+        logoutButton.setOnClickListener(v -> {
+            new AlertDialog.Builder(ProfileActivity.this)
+                    .setTitle("Confirm Logout")
+                    .setMessage("Are you sure you want to logout?")
+                    .setPositiveButton("Logout", (dialog, which) -> {
+                        // Clear SharedPreferences
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.clear();
+                        editor.apply();
+
+                        // Navigate to LoginActivity and clear back stack
+                        Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish(); // Optional: ensure current activity is finished
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
+        });
+        Button btnDeleteAccount = findViewById(R.id.btnDeleteAccount);
+        btnDeleteAccount.setOnClickListener(v -> confirmAndDeleteAccount());
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);  // Show the back arrow
+            getSupportActionBar().setTitle("Profile");              // Optional: Set title
+        }
+
+    }
+    private void confirmAndDeleteAccount() {
+        new AlertDialog.Builder(ProfileActivity.this)
+                .setTitle("Delete Account")
+                .setMessage("Are you sure you want to permanently delete your account? This action cannot be undone.")
+                .setPositiveButton("Delete", (dialog, which) -> performDeleteAccount())
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+    private void performDeleteAccount() {
+        Long userId = prefs.getLong("userId", -1L);
+        String token = prefs.getString("token", "");
+
+        if (userId == -1L || token.isEmpty()) {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        progressBar.setVisibility(View.VISIBLE);
+
+        UsersApi usersApi = ApiClient.getClientWithToken(token).create(UsersApi.class);
+        Call<Boolean> call = usersApi.deleteUser(userId);
+
+        call.enqueue(new Callback<Boolean>() {
+            @Override
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                progressBar.setVisibility(View.GONE);
+                if (response.isSuccessful() && Boolean.TRUE.equals(response.body())) {
+                    Toast.makeText(ProfileActivity.this, "Account deleted successfully", Toast.LENGTH_LONG).show();
+
+                    // Clear SharedPreferences
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.clear();
+                    editor.apply();
+
+                    // Redirect to login and clear back stack
+                    Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(ProfileActivity.this, "Failed to delete account", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Boolean> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                Toast.makeText(ProfileActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void setEditingEnabled(boolean enabled) {
@@ -107,20 +190,17 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void preloadUserInfo() {
-        Long userId = prefs.getLong("userId", -1);
-        String email = prefs.getString("email", "");
-        String password = prefs.getString("password", "");
+        String token = prefs.getString("token", "");
 
-        if (userId == -1 || email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(ProfileActivity.this, "User not logged in", Toast.LENGTH_SHORT).show();
+        if (token.isEmpty()) {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
             finish();
             return;
         }
 
-        UsersApi usersApi = ApiClient.getUsersApi(this);
-
-        Call<User> call = usersApi.getUserById(userId);
+        UsersApi usersApi = ApiClient.getClientWithToken(token).create(UsersApi.class);
+        Call<User> call = usersApi.getCurrentUser();
 
         call.enqueue(new Callback<User>() {
             @Override
@@ -156,6 +236,7 @@ public class ProfileActivity extends AppCompatActivity {
         String phoneNumber = prefs.getString("phoneNumber", "");
         String storedEmail = prefs.getString("email", "");
         String storedPassword = prefs.getString("password", "");
+        String token = prefs.getString("token", "");
 
         String firstNameInput = etFirstName.getText().toString().trim();
         String surnameInput = etSurname.getText().toString().trim();
@@ -215,8 +296,7 @@ public class ProfileActivity extends AppCompatActivity {
         updatedUser.setPhoneNumber(phoneNumber);
         updatedUser.setPassword(passwordToSave);
 
-        UsersApi usersApi = ApiClient.getUsersApi(this);
-
+        UsersApi usersApi = ApiClient.getClientWithToken(token).create(UsersApi.class);
         Call<User> call = usersApi.updateUser(updatedUser);
 
         call.enqueue(new Callback<User>() {
@@ -293,7 +373,8 @@ public class ProfileActivity extends AppCompatActivity {
         Long userId = prefs.getLong("userId", -1L);
         if (userId == -1L) return;
 
-        AddressApiService addressApiService = ApiClient.getAddressApiService(this);
+        String token = prefs.getString("token", "");
+        AddressApiService addressApiService = ApiClient.getClientWithToken(token).create(AddressApiService.class);
 
         Call<List<Address>> call = addressApiService.getUserAddresses(userId);
         call.enqueue(new Callback<List<Address>>() {
@@ -330,25 +411,18 @@ public class ProfileActivity extends AppCompatActivity {
                         tvStreet.setText(street);
 
                         // City, Province, PostalCode TextView
-                        TextView tvCityProvincePostal = new TextView(ProfileActivity.this);
-                        tvCityProvincePostal.setTextSize(14);
-                        tvCityProvincePostal.setPadding(0, 8, 0, 0);
+                        // City, PostalCode TextView (no province anymore)
+                        TextView tvCityPostal = new TextView(ProfileActivity.this);
+                        tvCityPostal.setTextSize(14);
+                        tvCityPostal.setPadding(0, 8, 0, 0);
 
-                        String cityProvincePostal = (address.getCity() != null ? address.getCity() + ", " : "") +
-                                (address.getProvince() != null ? address.getProvince() + " " : "") +
+                        String cityPostal = (address.getCity() != null ? address.getCity() + ", " : "") +
                                 (address.getPostalCode() != null ? address.getPostalCode() : "");
-                        tvCityProvincePostal.setText(cityProvincePostal);
+                        tvCityPostal.setText(cityPostal);
 
-                        // Country TextView
-                        TextView tvCountry = new TextView(ProfileActivity.this);
-                        tvCountry.setTextSize(14);
-                        tvCountry.setPadding(0, 4, 0, 0);
-                        tvCountry.setText(address.getCountry() != null ? address.getCountry() : "");
-
-                        // Add TextViews to addressLayout
+// Remove tvCountry, and just add tvCityPostal
                         addressLayout.addView(tvStreet);
-                        addressLayout.addView(tvCityProvincePostal);
-                        addressLayout.addView(tvCountry);
+                        addressLayout.addView(tvCityPostal);
 
                         // On click listener to open edit dialog
                         addressLayout.setOnClickListener(v -> showEditAddressDialog(address));
@@ -378,26 +452,19 @@ public class ProfileActivity extends AppCompatActivity {
 
         EditText etStreet = view.findViewById(R.id.etStreet);
         EditText etCity = view.findViewById(R.id.etCity);
-        EditText etProvince = view.findViewById(R.id.etProvince);
         EditText etPostalCode = view.findViewById(R.id.etPostalCode);
-        EditText etCountry = view.findViewById(R.id.etCountry);
-
         etStreet.setText(address.getStreetNumber() + " " + address.getStreetName());
         etCity.setText(address.getCity());
-        etProvince.setText(address.getProvince());
         etPostalCode.setText(address.getPostalCode());
-        etCountry.setText(address.getCountry());
 
         builder.setView(view);
 
         builder.setPositiveButton("Save", (dialog, which) -> {
             String streetInput = etStreet.getText().toString().trim();
             String city = etCity.getText().toString().trim();
-            String province = etProvince.getText().toString().trim();
             String postalCode = etPostalCode.getText().toString().trim();
-            String country = etCountry.getText().toString().trim();
 
-            if (streetInput.isEmpty() || city.isEmpty() || province.isEmpty() || postalCode.isEmpty() || country.isEmpty()) {
+            if (streetInput.isEmpty() || city.isEmpty()|| postalCode.isEmpty()) {
                 Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -412,9 +479,7 @@ public class ProfileActivity extends AppCompatActivity {
             address.setStreetNumber(streetNumber);
             address.setStreetName(streetName);
             address.setCity(city);
-            address.setProvince(province);
             address.setPostalCode(postalCode);
-            address.setCountry(country);
             updateAddressOnServer(address);
 
         });
@@ -433,20 +498,16 @@ public class ProfileActivity extends AppCompatActivity {
 
         EditText etStreet = view.findViewById(R.id.etStreet);
         EditText etCity = view.findViewById(R.id.etCity);
-        EditText etProvince = view.findViewById(R.id.etProvince);
         EditText etPostalCode = view.findViewById(R.id.etPostalCode);
-        EditText etCountry = view.findViewById(R.id.etCountry);
 
         builder.setView(view);
 
         builder.setPositiveButton("Save", (dialog, which) -> {
             String streetInput = etStreet.getText().toString().trim();
             String city = etCity.getText().toString().trim();
-            String province = etProvince.getText().toString().trim();
             String postalCode = etPostalCode.getText().toString().trim();
-            String country = etCountry.getText().toString().trim();
 
-            if (streetInput.isEmpty() || city.isEmpty() || province.isEmpty() || postalCode.isEmpty() || country.isEmpty()) {
+            if (streetInput.isEmpty() || city.isEmpty() || postalCode.isEmpty()) {
                 Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -466,9 +527,7 @@ public class ProfileActivity extends AppCompatActivity {
             newAddress.setStreetNumber(streetNumber);
             newAddress.setStreetName(streetName);
             newAddress.setCity(city);
-            newAddress.setProvince(province);
             newAddress.setPostalCode(postalCode);
-            newAddress.setCountry(country);
 
             saveAddressToServer(newAddress);
         });
@@ -481,7 +540,9 @@ public class ProfileActivity extends AppCompatActivity {
     private void saveAddressToServer(Address newAddress) {
         progressBar.setVisibility(View.VISIBLE);
 
-        AddressApiService addressApiService = ApiClient.getAddressApiService(this);
+        String token = prefs.getString("token", "");
+        AddressApiService addressApiService = ApiClient.getClientWithToken(token).create(AddressApiService.class);
+
 
         Call<Address> call = addressApiService.createAddress(newAddress);
 
@@ -505,13 +566,12 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
-
     private void updateAddressOnServer(Address address) {
         progressBar.setVisibility(View.VISIBLE);
 
-        AddressApiService addressApiService = ApiClient.getAddressApiService(this);
+        String token = prefs.getString("token", "");
+        AddressApiService addressApiService = ApiClient.getClientWithToken(token).create(AddressApiService.class);
         AddressDTO dto = convertToDTO(address);
-
 
         Call<Address> call = addressApiService.updateAddress(dto);
         call.enqueue(new Callback<Address>() {
@@ -536,18 +596,14 @@ public class ProfileActivity extends AppCompatActivity {
     }
     private AddressDTO convertToDTO(Address address) {
         Log.d("UpdateAddress", "userId: " + address.getUserId());
-        AddressDTO dto = new AddressDTO(
+        return new AddressDTO(
                 address.getId(),
                 address.getStreetNumber(),
                 address.getStreetName(),
                 address.getSuburb(),
                 address.getCity(),
-                address.getProvince(),
-                address.getCountry(),
                 address.getPostalCode(),
-                address.getUserId() // 🚨 Ensure this is included
+                address.getUserId()
         );
-        return dto;
     }
-
 }

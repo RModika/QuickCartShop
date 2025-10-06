@@ -139,6 +139,37 @@
                 android:textColor="@color/white"
                 android:layout_marginTop="16dp"/>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/btnLogout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:backgroundTint="@color/accent_pink"
+                    android:text="Logout"
+                    android:textColor="@android:color/white" />
+
+                <Button
+                    android:id="@+id/btnDeleteAccount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:backgroundTint="@color/accent_pink"
+                    android:text="Delete Account"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+
             <ProgressBar
                 android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
@@ -146,6 +177,7 @@
                 android:visibility="gone"
                 android:layout_gravity="center"
                 android:layout_marginTop="24dp" />
+
         </LinearLayout>
     </ScrollView>
 

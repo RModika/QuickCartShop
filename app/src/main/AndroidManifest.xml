@@ -57,6 +57,20 @@
             android:label="Manage Products"
             android:exported="true"/>
         <activity android:name=".ui.auth.AddressActivity" android:exported="true" />
+        <activity android:name=".ui.auth.ForgotPasswordActivity" android:exported="true" />
+
+        <activity
+            android:name=".ui.auth.ResetPasswordActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="myapp"
+                    android:host="reset-password" />
+            </intent-filter>
+        </activity>
 
     </application>
 

@@ -446,6 +446,8 @@ public class HomeActivity extends AppCompatActivity {
 
         cartIcon.setOnClickListener(v ->
                 startActivity(new Intent(HomeActivity.this, CartActivity.class)));
+
+
     }
 
     private void loadCategoriesFromApi() {
