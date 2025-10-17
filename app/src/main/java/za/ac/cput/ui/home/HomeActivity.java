@@ -370,6 +370,8 @@ package za.ac.cput.ui.home;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -391,16 +393,22 @@ import za.ac.cput.adapters.CategoryAdapter;
 import za.ac.cput.model.Category;
 import za.ac.cput.services.ApiClient;
 import za.ac.cput.services.CategoryApiService;
+import za.ac.cput.services.ProductApiService;
 import za.ac.cput.ui.auth.CartActivity;
 import za.ac.cput.ui.product.ProductsActivity;
+import za.ac.cput.ui.product.ReviewProductsActivity;
 import za.ac.cput.ui.profile.ProfileActivity;
 
 public class HomeActivity extends AppCompatActivity {
 
     private static final String TAG = "HomeActivity";
     private CategoryApiService categoryApiService;
+
+    private ProductApiService productApiService;
     private List<Category> loadedCategories;
     private RecyclerView categoryRecyclerView;
+
+    private EditText searchBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -410,6 +418,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // Initialize API service
         categoryApiService = ApiClient.getCategoryApiService(this);
+        productApiService = ApiClient.getProductApiService(this);
 
         // Adjust for system bars
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -422,11 +431,32 @@ public class HomeActivity extends AppCompatActivity {
         categoryRecyclerView = findViewById(R.id.categoryRecyclerView);
         categoryRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
 
+        // Search bar
+        searchBar = findViewById(R.id.searchBar);
+        searchBar.setOnEditorActionListener((v, actionId, event) -> {
+            String query = searchBar.getText().toString().trim();
+            if (!query.isEmpty()) {
+                openProductsWithSearch(query);
+            }
+            return true;
+        });
+        Button reviewProductsButton = findViewById(R.id.reviewProductsButton);
+        reviewProductsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, ReviewProductsActivity.class);
+            startActivity(intent);
+        });
+
         // Load categories from backend
         loadCategoriesFromApi();
 
         // Set bottom navigation clicks
         setBottomNavigationClicks();
+    }
+
+    private void openProductsWithSearch(String query) {
+        Intent intent = new Intent(HomeActivity.this, ProductsActivity.class);
+        intent.putExtra("SEARCH_QUERY", query);
+        startActivity(intent);
     }
 
     private void setBottomNavigationClicks() {

@@ -91,22 +91,6 @@ public class AddressActivity extends AppCompatActivity {
                     Toast.makeText(AddressActivity.this, "Error: " + error, Toast.LENGTH_SHORT).show();
                 }
             });
-
-            // *Immediately clear cart before making API call*
-            LocalCart.clearCart();
-
-            AddressService.saveAddress(this, address, new AddressService.AddressCallback() {
-                @Override
-                public void onSuccess() {
-                    Toast.makeText(AddressActivity.this, "Address saved! Checkout complete.", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-
-                @Override
-                public void onError(String error) {
-                    Toast.makeText(AddressActivity.this, "Error: " + error, Toast.LENGTH_SHORT).show();
-                }
-            });
         });
     }
 }

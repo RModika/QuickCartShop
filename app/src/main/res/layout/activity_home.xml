@@ -49,6 +49,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bottomNavBar" />
+    <Button
+        android:id="@+id/reviewProductsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Review Products"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="72dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavBar"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
 
     <!-- Bottom navigation bar -->
     <LinearLayout
