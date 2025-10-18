@@ -1,6 +1,7 @@
 package za.ac.cput.model;
-
-public class Address {
+import android.os.Parcel;
+import android.os.Parcelable;
+public class Address implements Parcelable{
 
     private Long id;                 // ✅ Matches backend field
     private String streetNumber;
@@ -108,5 +109,60 @@ public class Address {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+    protected Address(Parcel in) {
+        if (in.readByte() == 0) {
+            id = null;
+        } else {
+            id = in.readLong();
+        }
+        streetNumber = in.readString();
+        streetName = in.readString();
+        suburb = in.readString();
+        city = in.readString();
+        postalCode = in.readString();
+        if (in.readByte() == 0) {
+            userId = null;
+        } else {
+            userId = in.readLong();
+        }
+    }
+
+    public static final Creator<Address> CREATOR = new Creator<Address>() {
+        @Override
+        public Address createFromParcel(Parcel in) {
+            return new Address(in);
+        }
+
+        @Override
+        public Address[] newArray(int size) {
+            return new Address[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int flags) {
+        if (id == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeLong(id);
+        }
+        parcel.writeString(streetNumber);
+        parcel.writeString(streetName);
+        parcel.writeString(suburb);
+        parcel.writeString(city);
+        parcel.writeString(postalCode);
+        if (userId == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeLong(userId);
+        }
     }
 }

@@ -72,6 +72,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.product.ReviewProductsActivity" android:exported="true"/>
+        <activity android:name=".ui.auth.SelectAddressActivity" />
+
 
     </application>
 
