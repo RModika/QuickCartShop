@@ -5,7 +5,11 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:elevation="4dp"
-    android:background="@color/card_light">
+    android:radius="12dp"
+    android:background="@color/card_light"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,15 +18,18 @@
         android:padding="16dp"
         android:background="@color/card_light">
 
+        <!-- 🖼 Product Image -->
         <ImageView
             android:id="@+id/productImage"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_gravity="center_horizontal"
             android:scaleType="centerCrop"
-            android:background="@color/card_soft_pink"
-            android:src="@drawable/placeholder_image" />
+            android:background="#FFFFFF"
+        android:padding="8dp"
+        android:src="@drawable/placeholder_image" />
 
+        <!-- 🏷 Product Name -->
         <TextView
             android:id="@+id/productName"
             android:layout_width="match_parent"
@@ -33,6 +40,7 @@
             android:layout_marginTop="8dp"
             android:text="Product Name" />
 
+        <!-- 💰 Price -->
         <TextView
             android:id="@+id/productPrice"
             android:layout_width="match_parent"
@@ -43,22 +51,37 @@
             android:text="R99.99" />
 
         <TextView
-            android:id="@+id/productDescription"
+            android:id="@+id/productStock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stock: Available"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:paddingTop="2dp"
+            android:textColor="@color/green"/>
+
+
+        <!-- 🔍 View Details -->
+        <Button
+            android:id="@+id/btnViewDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="@color/text_primary"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:layout_marginTop="4dp"
-            android:text="Product description here" />
+            android:text="View Details"
+            android:backgroundTint="@color/accent_pink"
+            android:textColor="@color/white"
+            android:layout_marginTop="8dp"
+            android:paddingVertical="6dp"/>
 
+        <!-- 🛒 Add to Cart -->
         <Button
             android:id="@+id/btnAddToCart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Add to Cart"
-            android:layout_marginTop="8dp"/>
+            android:backgroundTint="@color/accent_pink"
+            android:textColor="@color/white"
+            android:layout_marginTop="4dp"
+            android:paddingVertical="6dp"/>
 
     </LinearLayout>
 

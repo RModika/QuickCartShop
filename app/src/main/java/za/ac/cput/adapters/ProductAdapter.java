@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -25,8 +26,13 @@ import za.ac.cput.util.LocalCart;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
 
+    private final Context context;
     private List<Product> products;
 
+    public ProductAdapter(Context context, List<Product> products) {
+        this.context = context;
+        this.products = products;
+    }
 
     public void setProducts(List<Product> products) {
         this.products = products;
@@ -44,7 +50,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         Product product = products.get(position);
-        holder.bind(product);
+        holder.bind(product, context);
     }
 
     @Override
@@ -54,29 +60,55 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     static class ProductViewHolder extends RecyclerView.ViewHolder {
         private ImageView productImage;
-        private TextView productName, productPrice, productDescription;
-
+        private TextView productName, productPrice, productDescription, productStock;
         private Button btnAddToCart;
+        private Button btnViewDetails;
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             productImage = itemView.findViewById(R.id.productImage);
             productName = itemView.findViewById(R.id.productName);
             productPrice = itemView.findViewById(R.id.productPrice);
-            productDescription = itemView.findViewById(R.id.productDescription);
+//            productDescription = itemView.findViewById(R.id.productDescription);
+            productStock = itemView.findViewById(R.id.productStock);
             btnAddToCart = itemView.findViewById(R.id.btnAddToCart);
+            btnViewDetails = itemView.findViewById(R.id.btnViewDetails);
         }
 
-        public void bind(Product product) {
+        public void bind(Product product, Context context) {
             productName.setText(product.getProductName());
             productPrice.setText(String.format("R%.2f", product.getProductPrice()));
-            productDescription.setText(product.getProductDescription());
+
+            // ✅ Show stock status visually
+            String stock = product.getStockAvailability();
+            if (stock != null) {
+                if (product.isAvailable()) {
+                    productStock.setText("Stock: Available");
+                    productStock.setTextColor(ContextCompat.getColor(context, R.color.green));
+                    btnAddToCart.setEnabled(true);
+                    btnAddToCart.setBackgroundTintList(
+                            ContextCompat.getColorStateList(context, R.color.accent_pink));
+                } else if (product.isLowStock()) {
+                    productStock.setText("Stock: Low");
+                    productStock.setTextColor(ContextCompat.getColor(context, R.color.orange));
+                    btnAddToCart.setEnabled(true);
+                    btnAddToCart.setBackgroundTintList(
+                            ContextCompat.getColorStateList(context, R.color.accent_pink));
+                } else if (product.isOutOfStock()) {
+                    productStock.setText("Stock: Out of Stock");
+                    productStock.setTextColor(ContextCompat.getColor(context, R.color.red));
+                    btnAddToCart.setEnabled(false);
+                    btnAddToCart.setBackgroundTintList(
+                            ContextCompat.getColorStateList(context, R.color.gray));
+                } else {
+                    productStock.setText("Stock: Unknown");
+                    productStock.setTextColor(ContextCompat.getColor(context, R.color.text_primary));
+                }
+            }
 
             loadProductImage(product.getProductId());
 
-
             itemView.setOnClickListener(v -> {
-                Context context = v.getContext();
                 Intent intent = new Intent(context, ProductDetailsActivity.class);
                 intent.putExtra("PRODUCT_ID", product.getProductId());
                 intent.putExtra("PRODUCT_NAME", product.getProductName());
@@ -86,33 +118,32 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                 context.startActivity(intent);
             });
 
-
             btnAddToCart.setOnClickListener(v -> {
                 int quantity = 1;
-
-//                CartItem cartItem = new CartItem.Builder()
-//                        .setProductId(product.getProductId())
-//                        .setQuantity(quantity)
-//                        .setPrice(product.getProductPrice())
-//                        .setTotalPrice(product.getProductPrice() * quantity)
-//                        .build();
-
-
                 CartItem cartItem = new CartItem.Builder()
                         .setProductId(product.getProductId())
-                        .setProductName(product.getProductName()) // new
-                        .setProductImageUrl("http://10.0.2.2:8080/mobileApp/Product/image/" + product.getProductId()) // new
+                        .setProductName(product.getProductName())
+                        .setProductImageUrl("http://10.0.2.2:8080/mobileApp/Product/image/" + product.getProductId())
                         .setQuantity(quantity)
                         .setPrice(product.getProductPrice())
                         .setTotalPrice(product.getProductPrice() * quantity)
                         .build();
 
-
                 LocalCart.addItem(cartItem);
 
-                Toast.makeText(v.getContext(),
+                Toast.makeText(context,
                         product.getProductName() + " added to cart",
                         Toast.LENGTH_SHORT).show();
+            });
+
+            btnViewDetails.setOnClickListener(v -> {
+                Intent intent = new Intent(context, ProductDetailsActivity.class);
+                intent.putExtra("PRODUCT_ID", product.getProductId());
+                intent.putExtra("PRODUCT_NAME", product.getProductName());
+                intent.putExtra("PRODUCT_PRICE", product.getProductPrice());
+                intent.putExtra("PRODUCT_DESCRIPTION", product.getProductDescription());
+                intent.putExtra("PRODUCT_STOCK", product.getStockAvailability());
+                context.startActivity(intent);
             });
         }
 
@@ -135,4 +166,4 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                     .into(productImage);
         }
     }
-    }
+}

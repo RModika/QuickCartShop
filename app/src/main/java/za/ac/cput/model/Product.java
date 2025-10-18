@@ -1,9 +1,9 @@
 package za.ac.cput.model;
 
 import com.google.gson.annotations.SerializedName;
-import java.util.Arrays;
 
 public class Product {
+
     @SerializedName("productId")
     private Long productId;
 
@@ -22,7 +22,6 @@ public class Product {
     @SerializedName("category")
     private Category category;
 
-
     public Product() {}
 
     public Product(Long productId, String productName, String productDescription,
@@ -35,6 +34,7 @@ public class Product {
         this.category = category;
     }
 
+    // Getters and setters
     public Long getProductId() { return productId; }
     public void setProductId(Long productId) { this.productId = productId; }
 
@@ -50,10 +50,21 @@ public class Product {
     public String getStockAvailability() { return stockAvailability; }
     public void setStockAvailability(String stockAvailability) { this.stockAvailability = stockAvailability; }
 
-
-
     public Category getCategory() { return category; }
     public void setCategory(Category category) { this.category = category; }
+
+    // === Helper methods for stock states ===
+    public boolean isAvailable() {
+        return "AVAILABLE".equalsIgnoreCase(stockAvailability);
+    }
+
+    public boolean isLowStock() {
+        return "LOW_STOCK".equalsIgnoreCase(stockAvailability);
+    }
+
+    public boolean isOutOfStock() {
+        return "OUT_OF_STOCK".equalsIgnoreCase(stockAvailability);
+    }
 
     @Override
     public String toString() {
