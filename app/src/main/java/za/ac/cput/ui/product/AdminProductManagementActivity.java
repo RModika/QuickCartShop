@@ -55,6 +55,7 @@ public class AdminProductManagementActivity extends AppCompatActivity {
     private ImageView imagePreview;
     private Button addProductButton;
     private List<Category> categoryList;
+    private Button viewUsersButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,7 @@ public class AdminProductManagementActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.adminProductsRecyclerView);
         addProductButton = findViewById(R.id.addProductButton);
+        viewUsersButton = findViewById(R.id.viewUsersButton);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         productList = new ArrayList<>();
@@ -88,7 +90,14 @@ public class AdminProductManagementActivity extends AppCompatActivity {
         loadProducts();
 
         addProductButton.setOnClickListener(v -> showAddProductDialog());
+
+
+        viewUsersButton.setOnClickListener(v -> {
+            Intent intent = new Intent(AdminProductManagementActivity.this, za.ac.cput.ui.ViewUsersActivity.class);
+            startActivity(intent);
+        });
     }
+
 
     private void showEditProductDialog(Product product) {
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_product_form, null);
