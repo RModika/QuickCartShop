@@ -45,4 +45,8 @@ public interface UsersApi {
     Call<ResponseBody> resetPassword(@Body ResetPasswordRequest body);
     @DELETE("users/{id}")
     Call<Boolean> deleteUser(@Path("id") Long userId);
+
+    @GET("users/getAll")
+    Call<List<User>> getAllUsers();
+
 }
